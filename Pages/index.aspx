@@ -13,7 +13,7 @@
     <form id="form1" runat="server">
         <div>
             <!-- Start of first page -->
-            <div data-role="page" id="foo">
+            <div data-role="page" id="home">
 
                 <div data-role="header">
                     <h1>Foo</h1>
@@ -24,8 +24,9 @@
                     <p>I'm first in the source order so I'm shown as the page.</p>
                     <p>View internal page called <a href="#bar">bar</a></p>
 
-                    <a href="#bar" class="ui-btn ui-btn-a" data-transition="slide">BAR</a>
-                   
+                    <a href="#startSession" class="ui-btn ui-btn-a" data-transition="slide">Start Session</a>
+                    <a href="#setDefaults" class="ui-btn ui-btn-a" data-transition="slide">Set Defaults</a>
+
                 </div>
                 <!-- /content -->
 
@@ -37,16 +38,64 @@
             <!-- /page -->
 
             <!-- Start of second page -->
-            <div data-role="page" id="bar">
+            <div data-role="page" id="startSession">
 
                 <div data-role="header">
-                    <h1>Bar</h1>
+                    <h1>Session Settings</h1>
+                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
                 </div>
                 <!-- /header -->
 
                 <div role="main" class="ui-content">
-                    <p>I'm the second in the source order so I'm hidden when the page loads. I'm just shown if a link that references my id is beeing clicked.</p>
-                    <p><a href="#foo"  data-transition="slide" data-direction="reverse">Back to foo</a></p>
+                    <p>The process will begin with setting the session settings. Then, once boiling begins, you can add data points</p>
+                    <label for="plannedBoil">Planned Boil Time:</label>
+                    <input type="number" data-clear-btn="true" name="plannedBoil" id="plannedBoil" value="" />
+                    <label for="plannedPostBoilVol">Planned Post-Boil Volume:</label>
+                    <input type="number" data-clear-btn="true" name="plannedPostBoilVol" id="plannedPostBoilVol" value="" />
+                    <label for="plannedPostGU">Planned Post-Boil Gravity Units:</label>
+                    <input type="number" data-clear-btn="true" name="plannedPostGU" id="plannedPostGU" value="" />
+                    <p>Planned checkpoints will notify you when to take readings. Like all things planned.... they are just reminders.</p>
+                    <label for="plannedChkPts">Planned Boil Time:</label>
+                    <select name="plannedChkPts" id="plannedChkPts" >
+                        <option value="50">50</option>
+                        <option value="45">45</option>
+                        <option value="30">30</option>
+                        <option value="20">20</option>
+                        <option value="15">15</option>
+                        <option value="10">10</option>
+                        <option value="5">5</option>
+                        
+                    </select>
+                </div>
+                <!-- /content -->
+
+                <div data-role="footer">
+                    <h4>Page Footer</h4>
+                </div>
+                <!-- /footer -->
+            </div>
+            <!-- /page -->
+
+
+
+            <!-- Start of second page -->
+            <div data-role="page" id="setDefaults">
+
+                <div data-role="header">
+                    <h1>System Defaults</h1>
+                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                </div>
+                <!-- /header -->
+
+                <div role="main" class="ui-content">
+                    <label for="boilRate">Boil Rate (gal/hour):</label>
+                    <input type="number" data-clear-btn="true" name="boilRate" id="boilRate" value="" />
+                    <label for="defaultBoilTime">Default Boil Time:</label>
+                    <input type="number" data-clear-btn="true" name="defaultBoilTime" id="defaultBoilTime" value="" />
+                    <label for="defaultPreBoilVolume">Default Pre-Boil Volume:</label>
+                    <input type="number" data-clear-btn="true" name="defaultPreBoilVolume" id="defaultPreBoilVolume" value="" />
+
+
                 </div>
                 <!-- /content -->
 

@@ -3,3 +3,9 @@ C:\Users\tmetcalf\Documents\GitHub\GuCalc\GuCalc\bin\GuCalc.pdb
 C:\Users\tmetcalf\Documents\GitHub\GuCalc\GuCalc\obj\Debug\GuCalc.csprojResolveAssemblyReference.cache
 C:\Users\tmetcalf\Documents\GitHub\GuCalc\GuCalc\obj\Debug\GuCalc.dll
 C:\Users\tmetcalf\Documents\GitHub\GuCalc\GuCalc\obj\Debug\GuCalc.pdb
+C:\Users\tmetcalf.Sao\Documents\GitHub\GUcalc\bin\GuCalc.dll.config
+C:\Users\tmetcalf.Sao\Documents\GitHub\GUcalc\bin\GuCalc.dll
+C:\Users\tmetcalf.Sao\Documents\GitHub\GUcalc\bin\GuCalc.pdb
+C:\Users\tmetcalf.Sao\Documents\GitHub\GUcalc\obj\Debug\GuCalc.csprojResolveAssemblyReference.cache
+C:\Users\tmetcalf.Sao\Documents\GitHub\GUcalc\obj\Debug\GuCalc.dll
+C:\Users\tmetcalf.Sao\Documents\GitHub\GUcalc\obj\Debug\GuCalc.pdb
