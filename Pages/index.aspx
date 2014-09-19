@@ -105,6 +105,79 @@
                 <!-- /footer -->
             </div>
             <!-- /page -->
+
+            <div data-role="page" id="startBoil">
+
+                <div data-role="header">
+                    <h1>Start Boil</h1>
+                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                </div>
+                <!-- /header -->
+
+                <div role="main" class="ui-content">
+                    <label for="initialVol">Initial Volume:</label>
+                    <input type="number" data-clear-btn="true" name="initialVol" id="initialVol" value="" />
+                    <label for="initialGU">Initial GU:</label>
+                    <input type="number" data-clear-btn="true" name="initialGU" id="initialGU" value="" />
+                   <input type="button" name="btInitialCapture" id="btnInitialCapture" />
+
+
+                </div>
+                <!-- /content -->
+
+                <div data-role="footer">
+                    <h4>Page Footer</h4>
+                </div>
+                <!-- /footer -->
+            </div>
+            <!-- /page -->
+             <div data-role="page" id="additionalReadings">
+
+                <div data-role="header">
+                    <h1>Additional Readings</h1>
+                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                </div>
+                <!-- /header -->
+
+                <div role="main" class="ui-content">
+                    <label for="currentVol">Current Volume:</label>
+                    <input type="number" data-clear-btn="true" name="initialVol" id="currentVol" value="" />
+                    <label for="currentGU">Current GU:</label>
+                    <input type="number" data-clear-btn="true" name="initialGU" id="currentGU" value="" />
+                   <input type="button" name="btnCurrentCapturee" id="btnCurrentCapture" />
+
+
+                </div>
+                <!-- /content -->
+
+                <div data-role="footer">
+                    <h4>Page Footer</h4>
+                </div>
+                <!-- /footer -->
+            </div>
+            <!-- /page -->
+            <div data-role="page" id="currentBrewSession">
+
+                <div data-role="header">
+                    <h1>Current Brew Session</h1>
+                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                </div>
+                <!-- /header -->
+
+                <div role="main" class="ui-content">
+                    <label for="currentVol">Current Volume:</label>
+                    
+                     <a href="#additionalReadings" class="ui-btn ui-btn-a" data-transition="slide">Enter Readings</a>
+                   
+                </div>
+                <!-- /content -->
+
+                <div data-role="footer">
+                    <h4>Page Footer</h4>
+                </div>
+                <!-- /footer -->
+            </div>
+            <!-- /page -->
         </div>
     </form>
 
