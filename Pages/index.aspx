@@ -16,22 +16,20 @@
             <div data-role="page" id="home">
 
                 <div data-role="header">
-                    <h1>Foo</h1>
+                    <h1>Home</h1>
                 </div>
                 <!-- /header -->
 
                 <div role="main" class="ui-content">
-                    <p>I'm first in the source order so I'm shown as the page.</p>
-                    <p>View internal page called <a href="#bar">bar</a></p>
-
-                    <a href="#startSession" class="ui-btn ui-btn-a" data-transition="slide">Start Session</a>
+                    <a href="#startSession" class="ui-btn ui-btn-a" data-transition="slide">Start New Session</a>
+                    <a href="#currentBrewSession" class="ui-btn ui-btn-a" data-transition="slide">Continue Current Session</a>
                     <a href="#setDefaults" class="ui-btn ui-btn-a" data-transition="slide">Set Defaults</a>
 
                 </div>
                 <!-- /content -->
 
                 <div data-role="footer">
-                    <h4>Page Footer</h4>
+                    <h4></h4>
                 </div>
                 <!-- /footer -->
             </div>
@@ -42,7 +40,7 @@
 
                 <div data-role="header">
                     <h1>Session Settings</h1>
-                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                    <p><a href="#home" class="ui-btn ui-btn-b" data-transition="slide" data-direction="reverse">Back</a></p>
                 </div>
                 <!-- /header -->
 
@@ -56,7 +54,7 @@
                     <input type="number" data-clear-btn="true" name="plannedPostGU" id="plannedPostGU" value="" />
                     <p>Planned checkpoints will notify you when to take readings. Like all things planned.... they are just reminders.</p>
                     <label for="plannedChkPts">Planned Boil Time:</label>
-                    <select name="plannedChkPts" id="plannedChkPts" >
+                    <select name="plannedChkPts" id="plannedChkPts">
                         <option value="50">50</option>
                         <option value="45">45</option>
                         <option value="30">30</option>
@@ -64,13 +62,13 @@
                         <option value="15">15</option>
                         <option value="10">10</option>
                         <option value="5">5</option>
-                        
+
                     </select>
                 </div>
                 <!-- /content -->
 
                 <div data-role="footer">
-                    <h4>Page Footer</h4>
+                    <a href="#startBoil" class="ui-btn ui-btn-a" data-transition="slide">Boil Starting</a>
                 </div>
                 <!-- /footer -->
             </div>
@@ -83,7 +81,7 @@
 
                 <div data-role="header">
                     <h1>System Defaults</h1>
-                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back </a></p>
                 </div>
                 <!-- /header -->
 
@@ -94,13 +92,11 @@
                     <input type="number" data-clear-btn="true" name="defaultBoilTime" id="defaultBoilTime" value="" />
                     <label for="defaultPreBoilVolume">Default Pre-Boil Volume:</label>
                     <input type="number" data-clear-btn="true" name="defaultPreBoilVolume" id="defaultPreBoilVolume" value="" />
-
-
                 </div>
                 <!-- /content -->
 
                 <div data-role="footer">
-                    <h4>Page Footer</h4>
+                    <h4></h4>
                 </div>
                 <!-- /footer -->
             </div>
@@ -110,7 +106,7 @@
 
                 <div data-role="header">
                     <h1>Start Boil</h1>
-                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                    <p><a href="#startSession" data-transition="slide" data-direction="reverse">Session Settings</a></p>
                 </div>
                 <!-- /header -->
 
@@ -119,23 +115,24 @@
                     <input type="number" data-clear-btn="true" name="initialVol" id="initialVol" value="" />
                     <label for="initialGU">Initial GU:</label>
                     <input type="number" data-clear-btn="true" name="initialGU" id="initialGU" value="" />
-                   <input type="button" name="btInitialCapture" id="btnInitialCapture" />
-
-
+                    <input type="button" name="btInitialCapture" id="btnInitialCapture" value="Boil has Started!" />
                 </div>
                 <!-- /content -->
 
                 <div data-role="footer">
-                    <h4>Page Footer</h4>
+                    <h4></h4>
                 </div>
                 <!-- /footer -->
             </div>
             <!-- /page -->
-             <div data-role="page" id="additionalReadings">
+
+
+
+            <div data-role="page" id="additionalReadings">
 
                 <div data-role="header">
                     <h1>Additional Readings</h1>
-                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                    <p><a href="#home" data-transition="slide" data-direction="reverse">Home</a></p>
                 </div>
                 <!-- /header -->
 
@@ -144,47 +141,88 @@
                     <input type="number" data-clear-btn="true" name="initialVol" id="currentVol" value="" />
                     <label for="currentGU">Current GU:</label>
                     <input type="number" data-clear-btn="true" name="initialGU" id="currentGU" value="" />
-                   <input type="button" name="btnCurrentCapturee" id="btnCurrentCapture" />
-
-
+                    <fieldset class="ui-grid-a">
+                        <div class="ui-block-a"><input type="button" name="btnCurrentCapturee" id="btnCurrentCapture" value="Submit Readings" /></div>
+                         <div class="ui-block-b"><input type="button" name="btnCurrentCapturee" id="btnCurrentCancel" value="Cancel Readings" /></div>
+                    </fieldset>
+                    
                 </div>
                 <!-- /content -->
 
                 <div data-role="footer">
-                    <h4>Page Footer</h4>
+                    <h4></h4>
                 </div>
                 <!-- /footer -->
             </div>
             <!-- /page -->
+
+
             <div data-role="page" id="currentBrewSession">
 
                 <div data-role="header">
                     <h1>Current Brew Session</h1>
-                    <p><a href="#home" data-transition="slide" data-direction="reverse">Back to Start</a></p>
+                    <p><a href="#home" data-transition="slide" data-direction="reverse">Home</a></p>
                 </div>
                 <!-- /header -->
 
                 <div role="main" class="ui-content">
-                    <label for="currentVol">Current Volume:</label>
-                    
-                     <a href="#additionalReadings" class="ui-btn ui-btn-a" data-transition="slide">Enter Readings</a>
-                   
+                    <div class="ui-grid-c">
+                        <div class="ui-block-a">
+                            <div class="ui-bar  ui-bar-a">
+                                <span id="lblBoilStartTime">Boil Start Time:</span>
+                            </div>
+                        </div>
+                        <div class="ui-block-b">
+                            <div class="ui-bar ui-bar-a">
+                                <span id="Span1">12:31 AM</span>
+                            </div>
+                        </div>
+                        <div class="ui-block-c">
+                            <div class="ui-bar  ui-bar-a">
+                                <span id="Span2">Boil Finish Time(Planned):</span>
+                            </div>
+                        </div>
+                        <div class="ui-block-d">
+                            <div class="ui-bar  ui-bar-a">
+                                <span id="Span3">1:31pm</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#additionalReadings" class="ui-btn ui-btn-a" data-transition="slide">Enter Readings</a>
+
                 </div>
                 <!-- /content -->
 
                 <div data-role="footer">
-                    <h4>Page Footer</h4>
+                    <h4></h4>
                 </div>
                 <!-- /footer -->
             </div>
-            <!-- /page -->
+        <!-- /page -->
         </div>
     </form>
 
     <script type="text/javascript">
+        $("#btnInitialCapture").click(function () {
+            goToCurrentBrewSession();
+        });
+
+        $("#btnCurrentCapture").click(function () {
+            goToCurrentBrewSession();
+        });
+
+        $("#btnCurrentCancel").click(function () {
+            goToCurrentBrewSession();
+        });
         
-       
-        
+
+        function goToCurrentBrewSession() {
+            var url = '#currentBrewSession';
+            $.mobile.changePage(url, { transition: "fade" });
+        };
+
+
     </script>
 
 </body>
