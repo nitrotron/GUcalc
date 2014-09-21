@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml"  manifest="../Manifest.ashx">
+<html xmlns="http://www.w3.org/1999/xhtml"></html>
 
     <head runat="server">
     <title>GUcalc</title>
@@ -225,11 +225,13 @@
             $.mobile.changePage(url, { transition: "fade" });
         };
 
+        function isOnLine() {
+           return navigator.onLine;
+        }
 
 
         function reportOnlineStatus() {
-            debugger;
-            var status = $("#onlineStatus");
+           var status = $("#onlineStatus");
 
             if (isOnLine()) {
                 status.text("Online");
@@ -244,21 +246,18 @@
                     addClass("offline");
             }
         }
-        window.applicationCache.onupdateready = function (e) {
-            debugger;
-            applicationCache.swapCache();
-            window.location.reload();
-        }
+        //window.applicationCache.onupdateready = function (e) {
+        //    applicationCache.swapCache();
+        //    window.location.reload();
+        //}
 
         window.addEventListener("online", function (e) {
-            debugger;
-            reportOnlineStatus();
+           reportOnlineStatus();
             //saveToServer();
         }, true);
 
         window.addEventListener("offline", function (e) {
-            debugger;
-            reportOnlineStatus();
+           reportOnlineStatus();
         }, true);
 
 
