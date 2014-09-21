@@ -261,6 +261,8 @@
            reportOnlineStatus();
         }, true);
 
+        $(document).ready(reportOnlineStatus());
+
 
     </script>
 
