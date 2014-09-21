@@ -276,7 +276,9 @@
     <Content Include="Content\jquery.mobile.structure-1.4.2.min.css" />
     <Content Include="Content\jquery.mobile.theme-1.4.2.css" />
     <Content Include="Content\jquery.mobile.theme-1.4.2.min.css" />
+    <Content Include="Manifest.txt" />
     <Content Include="packages.config" />
+    <Content Include="Manifest.ashx" />
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
     <Content Include="Pages\index.aspx" />
     <Content Include="Scripts\jquery-1.8.3.js" />
@@ -287,6 +289,9 @@
     <Content Include="Scripts\jquery.mobile-1.4.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Manifest.ashx.cs">
+      <DependentUpon>Manifest.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -311,6 +316,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
+  <PropertyGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />

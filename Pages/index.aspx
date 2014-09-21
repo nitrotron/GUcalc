@@ -2,8 +2,9 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
+<html xmlns="http://www.w3.org/1999/xhtml"  manifest="../Manifest.ashx">
+
+    <head runat="server">
     <title>GUcalc</title>
     <link href="../Content/jquery.mobile-1.4.2.css" rel="stylesheet" />
     <script src="../Scripts/jquery-1.8.3.min.js"></script>
@@ -17,6 +18,7 @@
 
                 <div data-role="header">
                     <h1>Home</h1>
+                    <div id="onlineStatus"></div>
                 </div>
                 <!-- /header -->
 
@@ -224,7 +226,43 @@
         };
 
 
+
+        function reportOnlineStatus() {
+            debugger;
+            var status = $("#onlineStatus");
+
+            if (isOnLine()) {
+                status.text("Online");
+                status.
+                    removeClass("offline").
+                    addClass("online");
+            }
+            else {
+                status.text("Offline");
+                status.
+                    removeClass("online").
+                    addClass("offline");
+            }
+        }
+        window.applicationCache.onupdateready = function (e) {
+            debugger;
+            applicationCache.swapCache();
+            window.location.reload();
+        }
+
+        window.addEventListener("online", function (e) {
+            debugger;
+            reportOnlineStatus();
+            //saveToServer();
+        }, true);
+
+        window.addEventListener("offline", function (e) {
+            debugger;
+            reportOnlineStatus();
+        }, true);
+
+
     </script>
 
 </body>
-</html>
+</>
