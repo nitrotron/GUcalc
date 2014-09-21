@@ -7,6 +7,7 @@
     <head runat="server">
     <title>GUcalc</title>
     <link href="../Content/jquery.mobile-1.4.2.css" rel="stylesheet" />
+    <link href="../Content/Site.css" rel="stylesheet" />
     <script src="../Scripts/jquery-1.8.3.min.js"></script>
     <script src="../Scripts/jquery.mobile-1.4.2.min.js"></script>
 </head>

@@ -276,6 +276,7 @@
     <Content Include="Content\jquery.mobile.structure-1.4.2.min.css" />
     <Content Include="Content\jquery.mobile.theme-1.4.2.css" />
     <Content Include="Content\jquery.mobile.theme-1.4.2.min.css" />
+    <Content Include="Content\Site.css" />
     <Content Include="Manifest.txt" />
     <Content Include="packages.config" />
     <Content Include="Manifest.ashx" />
