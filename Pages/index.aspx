@@ -92,6 +92,7 @@
                     <input type="number" data-clear-btn="true" name="defaultBoilTime" id="defaultBoilTime" value="" />
                     <label for="defaultPreBoilVolume">Default Pre-Boil Volume:</label>
                     <input type="number" data-clear-btn="true" name="defaultPreBoilVolume" id="defaultPreBoilVolume" value="" />
+                    <
                 </div>
                 <!-- /content -->
 
