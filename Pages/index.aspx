@@ -6,7 +6,7 @@
 
 <head runat="server">
     <title>GUcalc</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0;" />
     <link href="../Content/jquery.mobile-1.4.2.css" rel="stylesheet" />
     <link href="../Content/Site.css" rel="stylesheet" />
     <script src="../Scripts/jquery-1.8.3.min.js"></script>
@@ -72,7 +72,7 @@
                 <!-- /content -->
 
                 <div data-role="footer">
-                    <a href="#startBoil" class="ui-btn ui-btn-a" data-transition="slide">Boil Starting</a>
+                    <a href="#startBoil" class="ui-btn ui-btn-a" data-transition="slide" id="submitSession">Boil Starting</a>
                 </div>
                 <!-- /footer -->
             </div>
@@ -266,11 +266,32 @@
             reportOnlineStatus();
         }, true);
 
+        var db;
         $(document).ready(function () {
             reportOnlineStatus();
+            $('#submitSession').click(function () {
+                createSession();
+            })
+            
             $(document).on("pagebeforeshow", "#setDefaults", function (event) {
                 loadDefaults();
             });
+            var shortName = 'GuCalc';
+            var version = '1.0';
+            var displayName = 'GuCalc';
+            var maxSize = 65536;
+            db = openDatabase(shortName, version, displayName, maxSize);
+            db.transaction(
+            function (transaction) {
+                transaction.executeSql(
+                'CREATE TABLE IF NOT EXISTS sessions ' +
+                ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+                ' creationDate DATE NOT NULL,   ' +
+                ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
+                ' boilStartDate DATE, name TEXT);'
+                );
+            }
+            );
         });
 
         function goBack() {
@@ -290,6 +311,31 @@
             $('#boilRate').val(localStorage.boilRate);
             $('#defaultBoilTime').val(localStorage.defaultBoilTime);
             $('#defaultPreBoilVolume').val(localStorage.defaultPreBoilVolume);
+        }
+        function createSession() {
+            var creationDate = Date.now();
+            var postGU = $('#plannedPostBoilVol').val();
+            var postVol = $('plannedPostGU').val();
+
+            db.transaction(
+            function (transaction) {
+                transaction.executeSql(
+                'INSERT INTO sessions (creationDate, postGU, postVol) VALUES (?, ?, ?);',
+                [creationDate, postGU, postVol],
+                function () {
+                    //refreshEntries();
+                    goBack();
+                },
+                errorHandler
+                );
+            }
+            );
+            return false;
+        }
+
+        function errorHandler(transaction, error) {
+            alert('Oops. Error was ' + error.message + ' (Code ' + error.code + ')');
+            return true;
         }
 
     </script>
