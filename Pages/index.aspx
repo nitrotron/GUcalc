@@ -4,8 +4,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"></html>
 
-    <head runat="server">
+<head runat="server">
     <title>GUcalc</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0;">
     <link href="../Content/jquery.mobile-1.4.2.css" rel="stylesheet" />
     <link href="../Content/Site.css" rel="stylesheet" />
     <script src="../Scripts/jquery-1.8.3.min.js"></script>
@@ -95,7 +96,7 @@
                     <input type="number" data-clear-btn="true" name="defaultBoilTime" id="defaultBoilTime" value="" />
                     <label for="defaultPreBoilVolume">Default Pre-Boil Volume:</label>
                     <input type="number" data-clear-btn="true" name="defaultPreBoilVolume" id="defaultPreBoilVolume" value="" />
-                    <
+                    <a href="#" data-transition="slide" class="ui-btn ui-btn-a" data-direction="reverse" onclick="saveDefaults()">Save</a>
                 </div>
                 <!-- /content -->
 
@@ -146,10 +147,14 @@
                     <label for="currentGU">Current GU:</label>
                     <input type="number" data-clear-btn="true" name="initialGU" id="currentGU" value="" />
                     <fieldset class="ui-grid-a">
-                        <div class="ui-block-a"><input type="button" name="btnCurrentCapturee" id="btnCurrentCapture" value="Submit Readings" /></div>
-                         <div class="ui-block-b"><input type="button" name="btnCurrentCapturee" id="btnCurrentCancel" value="Cancel Readings" /></div>
+                        <div class="ui-block-a">
+                            <input type="button" name="btnCurrentCapturee" id="btnCurrentCapture" value="Submit Readings" />
+                        </div>
+                        <div class="ui-block-b">
+                            <input type="button" name="btnCurrentCapturee" id="btnCurrentCancel" value="Cancel Readings" />
+                        </div>
                     </fieldset>
-                    
+
                 </div>
                 <!-- /content -->
 
@@ -203,7 +208,7 @@
                 </div>
                 <!-- /footer -->
             </div>
-        <!-- /page -->
+            <!-- /page -->
         </div>
     </form>
 
@@ -219,7 +224,7 @@
         $("#btnCurrentCancel").click(function () {
             goToCurrentBrewSession();
         });
-        
+
 
         function goToCurrentBrewSession() {
             var url = '#currentBrewSession';
@@ -227,12 +232,12 @@
         };
 
         function isOnLine() {
-           return navigator.onLine;
+            return navigator.onLine;
         }
 
 
         function reportOnlineStatus() {
-           var status = $("#onlineStatus");
+            var status = $("#onlineStatus");
 
             if (isOnLine()) {
                 status.text("Online");
@@ -253,16 +258,39 @@
         //}
 
         window.addEventListener("online", function (e) {
-           reportOnlineStatus();
+            reportOnlineStatus();
             //saveToServer();
         }, true);
 
         window.addEventListener("offline", function (e) {
-           reportOnlineStatus();
+            reportOnlineStatus();
         }, true);
 
-        $(document).ready(reportOnlineStatus());
+        $(document).ready(function () {
+            reportOnlineStatus();
+            $(document).on("pagebeforeshow", "#setDefaults", function (event) {
+                loadDefaults();
+            });
+        });
 
+        function goBack() {
+            window.history.back()
+        }
+
+        //-------- form saving and populating ---------------
+        function saveDefaults() {
+            localStorage.boilRate = $('#boilRate').val();
+            localStorage.defaultBoilTime = $('#defaultBoilTime').val();
+            localStorage.defaultPreBoilVolume = $('#defaultPreBoilVolume').val();
+
+            goBack();
+            return false;
+        }
+        function loadDefaults() {
+            $('#boilRate').val(localStorage.boilRate);
+            $('#defaultBoilTime').val(localStorage.defaultBoilTime);
+            $('#defaultPreBoilVolume').val(localStorage.defaultPreBoilVolume);
+        }
 
     </script>
 
