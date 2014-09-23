@@ -56,8 +56,8 @@
                     <input type="number" data-clear-btn="true" name="plannedPostBoilVol" id="plannedPostBoilVol" value="" />
                     <label for="plannedPostGU">Planned Post-Boil Gravity Units:</label>
                     <input type="number" data-clear-btn="true" name="plannedPostGU" id="plannedPostGU" value="" />
-                    <p>Planned checkpoints will notify you when to take readings. Like all things planned.... they are just reminders.</p>
-                    <label for="plannedChkPts">Planned Boil Time:</label>
+                    <%--<p>Planned checkpoints will notify you when to take readings. Like all things planned.... they are just reminders.</p>--%>
+                    <%--<label for="plannedChkPts">Planned Boil Time:</label>
                     <select name="plannedChkPts" id="plannedChkPts">
                         <option value="50">50</option>
                         <option value="45">45</option>
@@ -66,13 +66,13 @@
                         <option value="15">15</option>
                         <option value="10">10</option>
                         <option value="5">5</option>
+                    </select>--%>
+                    <a href="#startBoil" class="ui-btn ui-btn-a" data-transition="slide" id="submitSession">Boil Starting!</a>
 
-                    </select>
                 </div>
                 <!-- /content -->
 
                 <div data-role="footer">
-                    <a href="#startBoil" class="ui-btn ui-btn-a" data-transition="slide" id="submitSession">Boil Starting</a>
                 </div>
                 <!-- /footer -->
             </div>
@@ -278,10 +278,12 @@
             $(document).on("pagebeforeshow", "#setDefaults", function (event) {
                 loadDefaults();
             });
+            debugger;
             var shortName = 'GuCalc';
-            var version = '1.0';
+            var version = '1.1';
             var displayName = 'GuCalc';
             var maxSize = 65536;
+
             db = openDatabase(shortName, version, displayName, maxSize);
             db.transaction(
             function (transaction) {
@@ -290,7 +292,7 @@
                 ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
                 ' creationDate DATE NOT NULL,   ' +
                 ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
-                ' boilStartDate DATE, name TEXT);'
+                ' boilLength FLOAT NOT NULL);'
                 );
             }
             );
@@ -319,12 +321,14 @@
             var creationDate = Date.now();
             var postGU = $('#plannedPostGU').val();
             var postVol = $('#plannedPostBoilVol').val();
+            var boilLength = $('#plannedBoil').val();
+            
 
             db.transaction(
             function (transaction) {
                 transaction.executeSql(
-                'INSERT INTO sessions (creationDate, postGU, postVol) VALUES (?, ?, ?);',
-                [creationDate, postGU, postVol],
+                'INSERT INTO sessions (creationDate, postGU, postVol, boilLength) VALUES (?, ?, ?, ?);',
+                [creationDate, postGU, postVol, boilLength],
                 function () {
                     //refreshEntries();
                     //goBack();
