@@ -270,9 +270,11 @@
         $(document).ready(function () {
             reportOnlineStatus();
             $('#submitSession').click(function () {
+                debugger;
                 createSession();
+                return false;
             })
-            
+
             $(document).on("pagebeforeshow", "#setDefaults", function (event) {
                 loadDefaults();
             });
@@ -311,11 +313,12 @@
             $('#boilRate').val(localStorage.boilRate);
             $('#defaultBoilTime').val(localStorage.defaultBoilTime);
             $('#defaultPreBoilVolume').val(localStorage.defaultPreBoilVolume);
-        }
+        }
+
         function createSession() {
             var creationDate = Date.now();
-            var postGU = $('#plannedPostBoilVol').val();
-            var postVol = $('plannedPostGU').val();
+            var postGU = $('#plannedPostGU').val();
+            var postVol = $('#plannedPostBoilVol').val();
 
             db.transaction(
             function (transaction) {
@@ -325,8 +328,10 @@
                 function () {
                     //refreshEntries();
                     goBack();
+                    return false;
                 },
-                errorHandler
+                errorHandler,
+                goToCurrentBrewSession
                 );
             }
             );
@@ -336,7 +341,8 @@
         function errorHandler(transaction, error) {
             alert('Oops. Error was ' + error.message + ' (Code ' + error.code + ')');
             return true;
-        }
+        }
+
 
     </script>
 
