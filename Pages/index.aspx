@@ -267,35 +267,95 @@
         }, true);
 
         var db;
+        // created by Max Aller <nanodeath@gmail.com>
+        function Migrator(db) {
+            var migrations = [];
+            this.migration = function (number, func) {
+                migrations[number] = func;
+            };
+            var doMigration = function (number) {
+                //debugger;
+                if (migrations[number]) {
+                    db.changeVersion(db.version, String(number), function (t) {
+                        migrations[number](t);
+                    }, function (err) {
+                        if (console.error) console.error("Error!: %o", err);
+                    }, function () {
+                        doMigration(number + 1);
+                    });
+                }
+            };
+            this.doIt = function () {
+                //debugger;
+                var initialVersion = parseInt(db.version) || 0;
+                try {
+                    doMigration(initialVersion + 1);
+                } catch (e) {
+                    if (console.error) console.error(e);
+                }
+            }
+        }
         $(document).ready(function () {
             reportOnlineStatus();
             $('#submitSession').click(function () {
-                debugger;
+                //debugger;
                 createSession();
                 return false;
             })
-
             $(document).on("pagebeforeshow", "#setDefaults", function (event) {
                 loadDefaults();
             });
-            debugger;
+
+
+            //debugger;
             var shortName = 'GuCalc';
-            var version = '1.1';
+            var version = '1';
             var displayName = 'GuCalc';
             var maxSize = 65536;
 
-            db = openDatabase(shortName, version, displayName, maxSize);
-            db.transaction(
-            function (transaction) {
-                transaction.executeSql(
-                'CREATE TABLE IF NOT EXISTS sessions ' +
-                ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-                ' creationDate DATE NOT NULL,   ' +
-                ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
-                ' boilLength FLOAT NOT NULL);'
-                );
-            }
-            );
+            db = openDatabase(shortName, "", displayName, maxSize);
+            var M = new Migrator(db);
+            M.migration(1, function (t) {
+                debugger;
+                t.executeSql(
+                    'CREATE TABLE IF NOT EXISTS sessions ' +
+                    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+                    ' creationDate DATE NOT NULL,   ' +
+                    ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
+                    ' boilLength FLOAT NOT NULL); '
+                    //' boilStartDate Date, name TEXT '
+                    //' boilLength FLOAT NOT NULL);'
+                    );
+            });
+            //M.migration(2, function (t) {
+            //    debugger;
+            //    t.executeSql(' alter table sessions ' +
+            //        ' ADD boilLength FLOAT '
+            //        );
+            //});
+            //M.migration(3, function (t) {
+            //    debugger;
+            //    t.executeSql(' alter table sessions ' +
+            //        ' DROP COLUMN boilStartDate, name '
+            //        );
+            //});
+
+
+            M.doIt();
+
+
+
+            //db.transaction(
+            //function (transaction) {
+            //    transaction.executeSql(
+            //    'CREATE TABLE IF NOT EXISTS sessions ' +
+            //    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+            //    ' creationDate DATE NOT NULL,   ' +
+            //    ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
+            //    ' boilLength FLOAT NOT NULL);'
+            //    );
+            //}
+            //);
         });
 
         function goBack() {
@@ -322,7 +382,7 @@
             var postGU = $('#plannedPostGU').val();
             var postVol = $('#plannedPostBoilVol').val();
             var boilLength = $('#plannedBoil').val();
-            
+
 
             db.transaction(
             function (transaction) {
