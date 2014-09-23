@@ -327,7 +327,9 @@
                 [creationDate, postGU, postVol],
                 function () {
                     //refreshEntries();
-                    goBack();
+                    //goBack();
+                    var url = '#startBoil';
+                    $.mobile.changePage(url, { transition: "fade" });
                     return false;
                 },
                 errorHandler,
