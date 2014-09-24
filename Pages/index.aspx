@@ -67,7 +67,7 @@
                         <option value="10">10</option>
                         <option value="5">5</option>
                     </select>--%>
-                    <a href="#startBoil" class="ui-btn ui-btn-a" data-transition="slide" id="submitSession">Boil Starting!</a>
+                    <a href="#" class="ui-btn ui-btn-a" data-transition="slide" id="submitSession">Boil Starting!</a>
 
                 </div>
                 <!-- /content -->
@@ -343,7 +343,21 @@
 
             M.doIt();
 
+            //readingDateTime, currentGU, currentVol, sessionID
 
+            var M2 = new Migrator(db);
+            M2.migration(1, function (t) {
+                debugger;
+                t.executeSql(
+                    'CREATE TABLE IF NOT EXISTS readings ' +
+                    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+                    ' readingDateTime DATE NOT NULL,   ' +
+                    ' currentGU FLOAT NOT NULL, currentVol FLOAT NOT NULL, ' +
+                    ' sessionID INTEGER NOT NULL); '
+                    );
+            });
+
+            M2.doIt();
 
             //db.transaction(
             //function (transaction) {
@@ -392,7 +406,7 @@
                 function () {
                     //refreshEntries();
                     //goBack();
-                    var url = '#startBoil';
+                    var url = '#additionalReadings';
                     $.mobile.changePage(url, { transition: "fade" });
                     return false;
                 },
@@ -403,6 +417,68 @@
             );
             return false;
         }
+        function recordReading() {
+            
+            //* Id 
+            //* SessionID
+            //* volume
+            //* Gu reading
+            //* Time
+
+
+            var readingDateTime = Date.now();
+            var currentGU = $('#initialGU').val();
+            var currentVol = $('#initialVol').val();
+            var sessionID = getLatestSession();
+
+
+            db.transaction(
+            function (transaction) {
+                transaction.executeSql(
+                'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
+                [readingDateTime, currentGU, currentVol, sessionID],
+                function () {
+                    //refreshEntries();
+                    //goBack();
+                    goToCurrentBrewSession();
+                    return false;
+                },
+                errorHandler,
+                goToCurrentBrewSession
+                );
+            }
+            );
+            return false;
+        }
+
+        var getLatestSession() {
+
+            db.transaction(
+ function(transaction) {
+     transaction.executeSql(
+     'SELECT top 1 * FROM sessions ORDER BY id;', 
+     function (transaction, result) {
+         for (var i=0; i < result.rows.length; i++) {
+             var row = result.rows.item(i);
+             var newEntryRow = $('#entryTemplate').clone();
+             newEntryRow.removeAttr('id');
+             newEntryRow.removeAttr('style');
+             newEntryRow.data('entryId', row.id);
+             newEntryRow.appendTo('#date ul');
+             newEntryRow.find('.label').text(row.food);
+             newEntryRow.find('.calories').text(row.calories);
+         }
+     }, 
+     errorHandler
+     )
+ });
+        
+
+        }
+
+
+
+
 
         function errorHandler(transaction, error) {
             alert('Oops. Error was ' + error.message + ' (Code ' + error.code + ')');
