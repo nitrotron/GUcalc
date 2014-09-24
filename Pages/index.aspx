@@ -143,9 +143,9 @@
 
                 <div role="main" class="ui-content">
                     <label for="currentVol">Current Volume:</label>
-                    <input type="number" data-clear-btn="true" name="initialVol" id="currentVol" value="" />
+                    <input type="number" data-clear-btn="true" name="currentVol" id="currentVol" value="" />
                     <label for="currentGU">Current GU:</label>
-                    <input type="number" data-clear-btn="true" name="initialGU" id="currentGU" value="" />
+                    <input type="number" data-clear-btn="true" name="currentGU" id="currentGU" value="" />
                     <fieldset class="ui-grid-a">
                         <div class="ui-block-a">
                             <input type="button" name="btnCurrentCapturee" id="btnCurrentCapture" value="Submit Readings" />
@@ -286,7 +286,7 @@
                 }
             };
             this.doIt = function () {
-                //debugger;
+                debugger;
                 var initialVersion = parseInt(db.version) || 0;
                 try {
                     doMigration(initialVersion + 1);
@@ -332,6 +332,16 @@
                     //' boilLength FLOAT NOT NULL);'
                     );
             });
+            M.migration(2, function (t) {
+                //debugger;
+                t.executeSql(
+                    'CREATE TABLE IF NOT EXISTS readings ' +
+                    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+                    ' readingDateTime DATE NOT NULL,   ' +
+                    ' currentGU FLOAT NOT NULL, currentVol FLOAT NOT NULL, ' +
+                    ' sessionID INTEGER NOT NULL); '
+                    );
+            });
             //M.migration(2, function (t) {
             //    debugger;
             //    t.executeSql(' alter table sessions ' +
@@ -348,33 +358,6 @@
 
             M.doIt();
 
-            //readingDateTime, currentGU, currentVol, sessionID
-
-            var M2 = new Migrator(db);
-            M2.migration(1, function (t) {
-                //debugger;
-                t.executeSql(
-                    'CREATE TABLE IF NOT EXISTS readings ' +
-                    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-                    ' readingDateTime DATE NOT NULL,   ' +
-                    ' currentGU FLOAT NOT NULL, currentVol FLOAT NOT NULL, ' +
-                    ' sessionID INTEGER NOT NULL); '
-                    );
-            });
-
-            M2.doIt();
-
-            //db.transaction(
-            //function (transaction) {
-            //    transaction.executeSql(
-            //    'CREATE TABLE IF NOT EXISTS sessions ' +
-            //    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-            //    ' creationDate DATE NOT NULL,   ' +
-            //    ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
-            //    ' boilLength FLOAT NOT NULL);'
-            //    );
-            //}
-            //);
         });
 
         function goBack() {
@@ -430,30 +413,55 @@
             //* Gu reading
             //* Time
 
+            getLatestSession();
 
-            var readingDateTime = Date.now();
-            var currentGU = $('#initialGU').val();
-            var currentVol = $('#initialVol').val();
-            var row = getLatestSession();
-            var sessionID = row.id;
+            //var readingDateTime = Date.now();
+            //var currentGU = $('#currentGU').val();
+            //var currentVol = $('#currentVol').val();
+            //var row = getLatestSession();
+            //debugger;
+            //var sessionID = 0;
+            //if (row) {
+            //    debugger;
+            //    sessionID = row.id;
+            //}
 
-            db.transaction(
-            function (transaction) {
-                transaction.executeSql(
-                'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
-                [readingDateTime, currentGU, currentVol, sessionID],
-                function () {
-                    //refreshEntries();
-                    //goBack();
-                    goToCurrentBrewSession();
-                    return false;
-                },
-                errorHandler,
-                goToCurrentBrewSession
-                );
-            }
-            );
+            //db.transaction(
+            //function (transaction) {
+            //    transaction.executeSql(
+            //    'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
+            //    [readingDateTime, currentGU, currentVol, sessionID],
+            //    function () {
+            //        //refreshEntries();
+            //        //goBack();
+            //        goToCurrentBrewSession();
+            //        return false;
+            //    },
+            //    errorHandler,
+            //    goToCurrentBrewSession
+            //    );
+            //}
+            //);
             return false;
+        }
+
+        function insertReadings(readingDateTime, readingDateTime, currentGU, currentVol, sessionID) {
+            db.transaction(
+function (transaction) {
+    transaction.executeSql(
+    'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
+    [readingDateTime, currentGU, currentVol, sessionID],
+    function () {
+        //refreshEntries();
+        //goBack();
+        goToCurrentBrewSession();
+        return false;
+    },
+      errorHandler,
+    goToCurrentBrewSession
+    );
+}
+);
         }
 
         function getLatestSession() {
@@ -461,33 +469,41 @@
             debugger;
             db.transaction(function (transaction) {
                 transaction.executeSql(
-                 'SELECT top 1 * FROM sessions ORDER BY id;',
+                 'SELECT TOP 1 * FROM sessions order by id desc',
                  [],
-                 function (transaction, result) {
-                     debugger;
-                     if (result.rows.length > 0)
-                         returnRow = result.rows.item(0);
-                     //for (var i = 0; i < result.rows.length; i++) {
-                     //    returnRow = result.rows.item(i);
-                         //var newEntryRow = $('#entryTemplate').clone();
-                         //newEntryRow.removeAttr('id');
-                         //newEntryRow.removeAttr('style');
-                         //newEntryRow.data('entryId', row.id);
-                         //newEntryRow.appendTo('#date ul');
-                         //newEntryRow.find('.label').text(row.food);
-                         //newEntryRow.find('.calories').text(row.calories);
-                     //}
+                 function (transactin, result) {
+                     if (result.rows.length > 0) {
+                         var readingDateTime = Date.now();
+                         var currentGU = $('#currentGU').val();
+                         var currentVol = $('#currentVol').val();
+                         var sessionID = result.rows.item(0).id;
+                         insertReadings(readingDateTime, readingDateTime, currentGU, currentVol, sessionID);
+                     }
                  },
                  errorHandler
                  );
 
             });
-            return returnRow;
-
         }
 
 
-
+        function resultsHandler(transaction, result) {
+            debugger;
+            //if (result.rows.length > 0)
+            //    returnRow = result.rows.item(0);
+            returnRow = result;
+            alert("Results length" + result.rows.length);
+            //for (var i = 0; i < result.rows.length; i++) {
+            //    returnRow = result.rows.item(i);
+            //var newEntryRow = $('#entryTemplate').clone();
+            //newEntryRow.removeAttr('id');
+            //newEntryRow.removeAttr('style');
+            //newEntryRow.data('entryId', row.id);
+            //newEntryRow.appendTo('#date ul');
+            //newEntryRow.find('.label').text(row.food);
+            //newEntryRow.find('.calories').text(row.calories);
+            //}
+        }
 
 
         function errorHandler(transaction, error) {
