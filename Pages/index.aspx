@@ -302,6 +302,11 @@
                 createSession();
                 return false;
             })
+            $('#btnCurrentCapture').click(function () {
+                recordReading();
+                goToCurrentBrewSession();
+                return false;
+            })
             $(document).on("pagebeforeshow", "#setDefaults", function (event) {
                 loadDefaults();
             });
@@ -316,7 +321,7 @@
             db = openDatabase(shortName, "", displayName, maxSize);
             var M = new Migrator(db);
             M.migration(1, function (t) {
-                debugger;
+                //debugger;
                 t.executeSql(
                     'CREATE TABLE IF NOT EXISTS sessions ' +
                     ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -347,7 +352,7 @@
 
             var M2 = new Migrator(db);
             M2.migration(1, function (t) {
-                debugger;
+                //debugger;
                 t.executeSql(
                     'CREATE TABLE IF NOT EXISTS readings ' +
                     ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -418,7 +423,7 @@
             return false;
         }
         function recordReading() {
-            
+            debugger;
             //* Id 
             //* SessionID
             //* volume
@@ -429,8 +434,8 @@
             var readingDateTime = Date.now();
             var currentGU = $('#initialGU').val();
             var currentVol = $('#initialVol').val();
-            var sessionID = getLatestSession();
-
+            var row = getLatestSession();
+            var sessionID = row.id;
 
             db.transaction(
             function (transaction) {
@@ -451,28 +456,33 @@
             return false;
         }
 
-        var getLatestSession() {
+        function getLatestSession() {
+            var returnRow;
+            debugger;
+            db.transaction(function (transaction) {
+                transaction.executeSql(
+                 'SELECT top 1 * FROM sessions ORDER BY id;',
+                 [],
+                 function (transaction, result) {
+                     debugger;
+                     if (result.rows.length > 0)
+                         returnRow = result.rows.item(0);
+                     //for (var i = 0; i < result.rows.length; i++) {
+                     //    returnRow = result.rows.item(i);
+                         //var newEntryRow = $('#entryTemplate').clone();
+                         //newEntryRow.removeAttr('id');
+                         //newEntryRow.removeAttr('style');
+                         //newEntryRow.data('entryId', row.id);
+                         //newEntryRow.appendTo('#date ul');
+                         //newEntryRow.find('.label').text(row.food);
+                         //newEntryRow.find('.calories').text(row.calories);
+                     //}
+                 },
+                 errorHandler
+                 );
 
-            db.transaction(
- function(transaction) {
-     transaction.executeSql(
-     'SELECT top 1 * FROM sessions ORDER BY id;', 
-     function (transaction, result) {
-         for (var i=0; i < result.rows.length; i++) {
-             var row = result.rows.item(i);
-             var newEntryRow = $('#entryTemplate').clone();
-             newEntryRow.removeAttr('id');
-             newEntryRow.removeAttr('style');
-             newEntryRow.data('entryId', row.id);
-             newEntryRow.appendTo('#date ul');
-             newEntryRow.find('.label').text(row.food);
-             newEntryRow.find('.calories').text(row.calories);
-         }
-     }, 
-     errorHandler
-     )
- });
-        
+            });
+            return returnRow;
 
         }
 
