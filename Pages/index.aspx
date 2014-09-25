@@ -175,7 +175,7 @@
                 <!-- /header -->
 
                 <div role="main" class="ui-content">
-                    <div class="ui-grid-c">
+                    <%--<div class="ui-grid-c">
                         <div class="ui-block-a">
                             <div class="ui-bar  ui-bar-a">
                                 <span id="lblBoilStartTime">Boil Start Time:</span>
@@ -196,8 +196,18 @@
                                 <span id="Span3">1:31pm</span>
                             </div>
                         </div>
+                    </div>--%>
+                    <div>
+                        <ul data-role="listview" class="ui-listview">
+                            <li id="readingsTemplate" sty>
+                                <span class="readingTime">Reading Time</span>
+                                <span class="readingGU">Gravity Units</span>
+                                <span class="readingVol">Volume</span>
+                                <span class="estPostBoilGU">Est. Post Boil Gravity:</span>
+                                <span class="estPostBoilVol">Est. Post Boil Volume:</span>
+                            </li>
+                        </ul>
                     </div>
-
                     <a href="#additionalReadings" class="ui-btn ui-btn-a" data-transition="slide">Enter Readings</a>
 
                 </div>
@@ -298,7 +308,6 @@
         $(document).ready(function () {
             reportOnlineStatus();
             $('#submitSession').click(function () {
-                //debugger;
                 createSession();
                 return false;
             })
@@ -321,7 +330,6 @@
             db = openDatabase(shortName, "", displayName, maxSize);
             var M = new Migrator(db);
             M.migration(1, function (t) {
-                //debugger;
                 t.executeSql(
                     'CREATE TABLE IF NOT EXISTS sessions ' +
                     ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -333,7 +341,6 @@
                     );
             });
             M.migration(2, function (t) {
-                //debugger;
                 t.executeSql(
                     'CREATE TABLE IF NOT EXISTS readings ' +
                     ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
@@ -342,13 +349,15 @@
                     ' sessionID INTEGER NOT NULL); '
                     );
             });
-            //M.migration(2, function (t) {
+
+            //for when I need to make an addition
+            //M.migration(3, function (t) {
             //    debugger;
             //    t.executeSql(' alter table sessions ' +
             //        ' ADD boilLength FLOAT '
             //        );
             //});
-            //M.migration(3, function (t) {
+            //M.migration(4, function (t) {
             //    debugger;
             //    t.executeSql(' alter table sessions ' +
             //        ' DROP COLUMN boilStartDate, name '
@@ -406,62 +415,27 @@
             return false;
         }
         function recordReading() {
-            debugger;
-            //* Id 
-            //* SessionID
-            //* volume
-            //* Gu reading
-            //* Time
-
             getLatestSession();
-
-            //var readingDateTime = Date.now();
-            //var currentGU = $('#currentGU').val();
-            //var currentVol = $('#currentVol').val();
-            //var row = getLatestSession();
-            //debugger;
-            //var sessionID = 0;
-            //if (row) {
-            //    debugger;
-            //    sessionID = row.id;
-            //}
-
-            //db.transaction(
-            //function (transaction) {
-            //    transaction.executeSql(
-            //    'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
-            //    [readingDateTime, currentGU, currentVol, sessionID],
-            //    function () {
-            //        //refreshEntries();
-            //        //goBack();
-            //        goToCurrentBrewSession();
-            //        return false;
-            //    },
-            //    errorHandler,
-            //    goToCurrentBrewSession
-            //    );
-            //}
-            //);
             return false;
         }
 
         function insertReadings(readingDateTime, readingDateTime, currentGU, currentVol, sessionID) {
             db.transaction(
-function (transaction) {
-    transaction.executeSql(
-    'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
-    [readingDateTime, currentGU, currentVol, sessionID],
-    function () {
-        //refreshEntries();
-        //goBack();
-        goToCurrentBrewSession();
-        return false;
-    },
-      errorHandler,
-    goToCurrentBrewSession
-    );
-}
-);
+            function (transaction) {
+                transaction.executeSql(
+                'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
+                [readingDateTime, currentGU, currentVol, sessionID],
+                function () {
+                    //refreshEntries();
+                    //goBack();
+                    goToCurrentBrewSession();
+                    return false;
+                },
+                  errorHandler,
+                goToCurrentBrewSession
+                );
+            }
+            );
         }
 
         function getLatestSession() {
