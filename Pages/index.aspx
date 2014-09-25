@@ -175,39 +175,16 @@
                 <!-- /header -->
 
                 <div role="main" class="ui-content">
-                    <%--<div class="ui-grid-c">
-                        <div class="ui-block-a">
-                            <div class="ui-bar  ui-bar-a">
-                                <span id="lblBoilStartTime">Boil Start Time:</span>
-                            </div>
-                        </div>
-                        <div class="ui-block-b">
-                            <div class="ui-bar ui-bar-a">
-                                <span id="Span1">12:31 AM</span>
-                            </div>
-                        </div>
-                        <div class="ui-block-c">
-                            <div class="ui-bar  ui-bar-a">
-                                <span id="Span2">Boil Finish Time(Planned):</span>
-                            </div>
-                        </div>
-                        <div class="ui-block-d">
-                            <div class="ui-bar  ui-bar-a">
-                                <span id="Span3">1:31pm</span>
-                            </div>
-                        </div>
-                    </div>--%>
-                    <div>
-                        <ul data-role="listview" class="ui-listview">
-                            <li id="readingsTemplate" sty>
-                                <span class="readingTime">Reading Time</span>
-                                <span class="readingGU">Gravity Units</span>
-                                <span class="readingVol">Volume</span>
-                                <span class="estPostBoilGU">Est. Post Boil Gravity:</span>
-                                <span class="estPostBoilVol">Est. Post Boil Volume:</span>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul data-role="listview" class="ui-listview">
+                        <li id="readingsTemplate" class="entry" style="display: none">
+                            <span class="readingTime">Reading Time</span>
+                            <span class="readingGU">Gravity Units</span>
+                            <span class="readingVol">Volume</span>
+                            <span class="estPostBoilGU">Est. Post Boil Gravity:</span>
+                            <span class="estPostBoilVol">Est. Post Boil Volume:</span>
+                        </li>
+                    </ul>
+
                     <a href="#additionalReadings" class="ui-btn ui-btn-a" data-transition="slide">Enter Readings</a>
 
                 </div>
@@ -400,9 +377,11 @@
                 transaction.executeSql(
                 'INSERT INTO sessions (creationDate, postGU, postVol, boilLength) VALUES (?, ?, ?, ?);',
                 [creationDate, postGU, postVol, boilLength],
-                function () {
+                function (transaction, results) {
                     //refreshEntries();
                     //goBack();
+                    debugger;
+                    localStorage.sessionID = results.insertId;
                     var url = '#additionalReadings';
                     $.mobile.changePage(url, { transition: "fade" });
                     return false;
@@ -419,7 +398,7 @@
             return false;
         }
 
-        function insertReadings(readingDateTime, readingDateTime, currentGU, currentVol, sessionID) {
+        function insertReadings(readingDateTime, currentGU, currentVol, sessionID) {
             db.transaction(
             function (transaction) {
                 transaction.executeSql(
@@ -434,7 +413,7 @@
                   errorHandler,
                 goToCurrentBrewSession
                 );
-            }
+               }
             );
         }
 
@@ -452,8 +431,10 @@
                          var currentGU = $('#currentGU').val();
                          var currentVol = $('#currentVol').val();
                          var sessionID = result.rows.item(0).id;
-                         insertReadings(readingDateTime, readingDateTime, currentGU, currentVol, sessionID);
+                         insertReadings(readingDateTime, currentGU, currentVol, sessionID);
+                         refreshEntries();
                      }
+
                  },
                  errorHandler
                  );
@@ -461,6 +442,34 @@
             });
         }
 
+        function refreshEntries() {
+            var sessionID = localStorage.sessionID;
+            $('#currentBrewSession  ul li:gt(0)').remove();
+            db.transaction(
+                function (transaction) {
+                    transaction.executeSql(
+                        'SELECT * FROM readings WHERE sessionID = ? ORDER BY readingDateTime;',
+                        [sessionID],
+                        function (transaction, result) {
+                            debugger;
+                            for (var i = 0; i < result.rows.length; i++) {
+                                var row2 = result.rows.item(i);
+                                var newEntryRow = $('#readingsTemplate').clone();
+                                newEntryRow.removeAttr('id');
+                                newEntryRow.removeAttr('style');
+                                newEntryRow.data('entryId', row2.id);
+                                newEntryRow.appendTo('#currentBrewSession ul');
+                                var newDate = new Date(row2.readingDateTime);
+                                newEntryRow.find('.readingTime').text('Reading at: ' + newDate.getHours() + ':' + newDate.getMinutes());
+                                newEntryRow.find('.readingGU').text('Gravity Reading: ' + row2.currentGU);
+                                newEntryRow.find('.readingVol').text('Volume Reading: ' + row2.currentVol);
+
+                            }
+                        },
+                        errorHandler
+                        );
+                })
+        }
 
         function resultsHandler(transaction, result) {
             debugger;
