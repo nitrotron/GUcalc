@@ -469,9 +469,10 @@ function (transaction) {
             debugger;
             db.transaction(function (transaction) {
                 transaction.executeSql(
-                 'SELECT TOP 1 * FROM sessions order by id desc',
+                 'SELECT * FROM sessions order by id desc limit 1',
                  [],
-                 function (transactin, result) {
+                 function (transaction, result) {
+                     debugger;
                      if (result.rows.length > 0) {
                          var readingDateTime = Date.now();
                          var currentGU = $('#currentGU').val();
