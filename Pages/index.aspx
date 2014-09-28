@@ -11,6 +11,7 @@
     <link href="../Content/Site.css" rel="stylesheet" />
     <script src="../Scripts/jquery-1.8.3.min.js"></script>
     <script src="../Scripts/jquery.mobile-1.4.2.min.js"></script>
+    <script src="../Scripts/GuCalc.js"></script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -200,300 +201,300 @@
     </form>
 
     <script type="text/javascript">
-        $("#btnInitialCapture").click(function () {
-            goToCurrentBrewSession();
-        });
+        //$("#btnInitialCapture").click(function () {
+        //    goToCurrentBrewSession();
+        //});
 
-        $("#btnCurrentCapture").click(function () {
-            goToCurrentBrewSession();
-        });
+        //$("#btnCurrentCapture").click(function () {
+        //    goToCurrentBrewSession();
+        //});
 
-        $("#btnCurrentCancel").click(function () {
-            goToCurrentBrewSession();
-        });
-
-
-        function goToCurrentBrewSession() {
-            var url = '#currentBrewSession';
-            $.mobile.changePage(url, { transition: "fade" });
-        };
-
-        function isOnLine() {
-            return navigator.onLine;
-        }
+        //$("#btnCurrentCancel").click(function () {
+        //    goToCurrentBrewSession();
+        //});
 
 
-        function reportOnlineStatus() {
-            var status = $("#onlineStatus");
+        //function goToCurrentBrewSession() {
+        //    var url = '#currentBrewSession';
+        //    $.mobile.changePage(url, { transition: "fade" });
+        //};
 
-            if (isOnLine()) {
-                status.text("Online");
-                status.
-                    removeClass("offline").
-                    addClass("online");
-            }
-            else {
-                status.text("Offline");
-                status.
-                    removeClass("online").
-                    addClass("offline");
-            }
-        }
-        //window.applicationCache.onupdateready = function (e) {
-        //    applicationCache.swapCache();
-        //    window.location.reload();
+        //function isOnLine() {
+        //    return navigator.onLine;
         //}
 
-        window.addEventListener("online", function (e) {
-            reportOnlineStatus();
-            //saveToServer();
-        }, true);
 
-        window.addEventListener("offline", function (e) {
-            reportOnlineStatus();
-        }, true);
+        //function reportOnlineStatus() {
+        //    var status = $("#onlineStatus");
 
-        var db;
-        // created by Max Aller <nanodeath@gmail.com>
-        function Migrator(db) {
-            var migrations = [];
-            this.migration = function (number, func) {
-                migrations[number] = func;
-            };
-            var doMigration = function (number) {
-                //debugger;
-                if (migrations[number]) {
-                    db.changeVersion(db.version, String(number), function (t) {
-                        migrations[number](t);
-                    }, function (err) {
-                        if (console.error) console.error("Error!: %o", err);
-                    }, function () {
-                        doMigration(number + 1);
-                    });
-                }
-            };
-            this.doIt = function () {
-                debugger;
-                var initialVersion = parseInt(db.version) || 0;
-                try {
-                    doMigration(initialVersion + 1);
-                } catch (e) {
-                    if (console.error) console.error(e);
-                }
-            }
-        }
-        $(document).ready(function () {
-            reportOnlineStatus();
-            $('#submitSession').click(function () {
-                createSession();
-                return false;
-            })
-            $('#btnCurrentCapture').click(function () {
-                recordReading();
-                goToCurrentBrewSession();
-                return false;
-            })
-            $(document).on("pagebeforeshow", "#setDefaults", function (event) {
-                loadDefaults();
-            });
+        //    if (isOnLine()) {
+        //        status.text("Online");
+        //        status.
+        //            removeClass("offline").
+        //            addClass("online");
+        //    }
+        //    else {
+        //        status.text("Offline");
+        //        status.
+        //            removeClass("online").
+        //            addClass("offline");
+        //    }
+        //}
+        ////window.applicationCache.onupdateready = function (e) {
+        ////    applicationCache.swapCache();
+        ////    window.location.reload();
+        ////}
 
+        //window.addEventListener("online", function (e) {
+        //    reportOnlineStatus();
+        //    //saveToServer();
+        //}, true);
 
-            //debugger;
-            var shortName = 'GuCalc';
-            var version = '1';
-            var displayName = 'GuCalc';
-            var maxSize = 65536;
+        //window.addEventListener("offline", function (e) {
+        //    reportOnlineStatus();
+        //}, true);
 
-            db = openDatabase(shortName, "", displayName, maxSize);
-            var M = new Migrator(db);
-            M.migration(1, function (t) {
-                t.executeSql(
-                    'CREATE TABLE IF NOT EXISTS sessions ' +
-                    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-                    ' creationDate DATE NOT NULL,   ' +
-                    ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
-                    ' boilLength FLOAT NOT NULL); '
-                    //' boilStartDate Date, name TEXT '
-                    //' boilLength FLOAT NOT NULL);'
-                    );
-            });
-            M.migration(2, function (t) {
-                t.executeSql(
-                    'CREATE TABLE IF NOT EXISTS readings ' +
-                    ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-                    ' readingDateTime DATE NOT NULL,   ' +
-                    ' currentGU FLOAT NOT NULL, currentVol FLOAT NOT NULL, ' +
-                    ' sessionID INTEGER NOT NULL); '
-                    );
-            });
-
-            //for when I need to make an addition
-            //M.migration(3, function (t) {
-            //    debugger;
-            //    t.executeSql(' alter table sessions ' +
-            //        ' ADD boilLength FLOAT '
-            //        );
-            //});
-            //M.migration(4, function (t) {
-            //    debugger;
-            //    t.executeSql(' alter table sessions ' +
-            //        ' DROP COLUMN boilStartDate, name '
-            //        );
-            //});
+        //var db;
+        //// created by Max Aller <nanodeath@gmail.com>
+        //function Migrator(db) {
+        //    var migrations = [];
+        //    this.migration = function (number, func) {
+        //        migrations[number] = func;
+        //    };
+        //    var doMigration = function (number) {
+        //        //debugger;
+        //        if (migrations[number]) {
+        //            db.changeVersion(db.version, String(number), function (t) {
+        //                migrations[number](t);
+        //            }, function (err) {
+        //                if (console.error) console.error("Error!: %o", err);
+        //            }, function () {
+        //                doMigration(number + 1);
+        //            });
+        //        }
+        //    };
+        //    this.doIt = function () {
+        //        debugger;
+        //        var initialVersion = parseInt(db.version) || 0;
+        //        try {
+        //            doMigration(initialVersion + 1);
+        //        } catch (e) {
+        //            if (console.error) console.error(e);
+        //        }
+        //    }
+        //}
+        //$(document).ready(function () {
+        //    reportOnlineStatus();
+        //    $('#submitSession').click(function () {
+        //        createSession();
+        //        return false;
+        //    })
+        //    $('#btnCurrentCapture').click(function () {
+        //        recordReading();
+        //        goToCurrentBrewSession();
+        //        return false;
+        //    })
+        //    $(document).on("pagebeforeshow", "#setDefaults", function (event) {
+        //        loadDefaults();
+        //    });
 
 
-            M.doIt();
+        //    //debugger;
+        //    var shortName = 'GuCalc';
+        //    var version = '1';
+        //    var displayName = 'GuCalc';
+        //    var maxSize = 65536;
 
-        });
+        //    db = openDatabase(shortName, "", displayName, maxSize);
+        //    var M = new Migrator(db);
+        //    M.migration(1, function (t) {
+        //        t.executeSql(
+        //            'CREATE TABLE IF NOT EXISTS sessions ' +
+        //            ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+        //            ' creationDate DATE NOT NULL,   ' +
+        //            ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
+        //            ' boilLength FLOAT NOT NULL); '
+        //            //' boilStartDate Date, name TEXT '
+        //            //' boilLength FLOAT NOT NULL);'
+        //            );
+        //    });
+        //    M.migration(2, function (t) {
+        //        t.executeSql(
+        //            'CREATE TABLE IF NOT EXISTS readings ' +
+        //            ' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+        //            ' readingDateTime DATE NOT NULL,   ' +
+        //            ' currentGU FLOAT NOT NULL, currentVol FLOAT NOT NULL, ' +
+        //            ' sessionID INTEGER NOT NULL); '
+        //            );
+        //    });
 
-        function goBack() {
-            window.history.back()
-        }
-
-        //-------- form saving and populating ---------------
-        function saveDefaults() {
-            localStorage.boilRate = $('#boilRate').val();
-            localStorage.defaultBoilTime = $('#defaultBoilTime').val();
-            localStorage.defaultPreBoilVolume = $('#defaultPreBoilVolume').val();
-
-            goBack();
-            return false;
-        }
-        function loadDefaults() {
-            $('#boilRate').val(localStorage.boilRate);
-            $('#defaultBoilTime').val(localStorage.defaultBoilTime);
-            $('#defaultPreBoilVolume').val(localStorage.defaultPreBoilVolume);
-        }
-
-        function createSession() {
-            var creationDate = Date.now();
-            var postGU = $('#plannedPostGU').val();
-            var postVol = $('#plannedPostBoilVol').val();
-            var boilLength = $('#plannedBoil').val();
-
-
-            db.transaction(
-            function (transaction) {
-                transaction.executeSql(
-                'INSERT INTO sessions (creationDate, postGU, postVol, boilLength) VALUES (?, ?, ?, ?);',
-                [creationDate, postGU, postVol, boilLength],
-                function (transaction, results) {
-                    //refreshEntries();
-                    //goBack();
-                    debugger;
-                    localStorage.sessionID = results.insertId;
-                    var url = '#additionalReadings';
-                    $.mobile.changePage(url, { transition: "fade" });
-                    return false;
-                },
-                errorHandler,
-                goToCurrentBrewSession
-                );
-            }
-            );
-            return false;
-        }
-        function recordReading() {
-            getLatestSession();
-            return false;
-        }
-
-        function insertReadings(readingDateTime, currentGU, currentVol, sessionID) {
-            db.transaction(
-            function (transaction) {
-                transaction.executeSql(
-                'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
-                [readingDateTime, currentGU, currentVol, sessionID],
-                function () {
-                    //refreshEntries();
-                    //goBack();
-                    goToCurrentBrewSession();
-                    return false;
-                },
-                  errorHandler,
-                goToCurrentBrewSession
-                );
-               }
-            );
-        }
-
-        function getLatestSession() {
-            var returnRow;
-            debugger;
-            db.transaction(function (transaction) {
-                transaction.executeSql(
-                 'SELECT * FROM sessions order by id desc limit 1',
-                 [],
-                 function (transaction, result) {
-                     debugger;
-                     if (result.rows.length > 0) {
-                         var readingDateTime = Date.now();
-                         var currentGU = $('#currentGU').val();
-                         var currentVol = $('#currentVol').val();
-                         var sessionID = result.rows.item(0).id;
-                         insertReadings(readingDateTime, currentGU, currentVol, sessionID);
-                         refreshEntries();
-                     }
-
-                 },
-                 errorHandler
-                 );
-
-            });
-        }
-
-        function refreshEntries() {
-            var sessionID = localStorage.sessionID;
-            $('#currentBrewSession  ul li:gt(0)').remove();
-            db.transaction(
-                function (transaction) {
-                    transaction.executeSql(
-                        'SELECT * FROM readings WHERE sessionID = ? ORDER BY readingDateTime;',
-                        [sessionID],
-                        function (transaction, result) {
-                            debugger;
-                            for (var i = 0; i < result.rows.length; i++) {
-                                var row2 = result.rows.item(i);
-                                var newEntryRow = $('#readingsTemplate').clone();
-                                newEntryRow.removeAttr('id');
-                                newEntryRow.removeAttr('style');
-                                newEntryRow.data('entryId', row2.id);
-                                newEntryRow.appendTo('#currentBrewSession ul');
-                                var newDate = new Date(row2.readingDateTime);
-                                newEntryRow.find('.readingTime').text('Reading at: ' + newDate.getHours() + ':' + newDate.getMinutes());
-                                newEntryRow.find('.readingGU').text('Gravity Reading: ' + row2.currentGU);
-                                newEntryRow.find('.readingVol').text('Volume Reading: ' + row2.currentVol);
-
-                            }
-                        },
-                        errorHandler
-                        );
-                })
-        }
-
-        function resultsHandler(transaction, result) {
-            debugger;
-            //if (result.rows.length > 0)
-            //    returnRow = result.rows.item(0);
-            returnRow = result;
-            alert("Results length" + result.rows.length);
-            //for (var i = 0; i < result.rows.length; i++) {
-            //    returnRow = result.rows.item(i);
-            //var newEntryRow = $('#entryTemplate').clone();
-            //newEntryRow.removeAttr('id');
-            //newEntryRow.removeAttr('style');
-            //newEntryRow.data('entryId', row.id);
-            //newEntryRow.appendTo('#date ul');
-            //newEntryRow.find('.label').text(row.food);
-            //newEntryRow.find('.calories').text(row.calories);
-            //}
-        }
+        //    //for when I need to make an addition
+        //    //M.migration(3, function (t) {
+        //    //    debugger;
+        //    //    t.executeSql(' alter table sessions ' +
+        //    //        ' ADD boilLength FLOAT '
+        //    //        );
+        //    //});
+        //    //M.migration(4, function (t) {
+        //    //    debugger;
+        //    //    t.executeSql(' alter table sessions ' +
+        //    //        ' DROP COLUMN boilStartDate, name '
+        //    //        );
+        //    //});
 
 
-        function errorHandler(transaction, error) {
-            alert('Oops. Error was ' + error.message + ' (Code ' + error.code + ')');
-            return true;
-        }
+        //    M.doIt();
+
+        //});
+
+        //function goBack() {
+        //    window.history.back()
+        //}
+
+        ////-------- form saving and populating ---------------
+        //function saveDefaults() {
+        //    localStorage.boilRate = $('#boilRate').val();
+        //    localStorage.defaultBoilTime = $('#defaultBoilTime').val();
+        //    localStorage.defaultPreBoilVolume = $('#defaultPreBoilVolume').val();
+
+        //    goBack();
+        //    return false;
+        //}
+        //function loadDefaults() {
+        //    $('#boilRate').val(localStorage.boilRate);
+        //    $('#defaultBoilTime').val(localStorage.defaultBoilTime);
+        //    $('#defaultPreBoilVolume').val(localStorage.defaultPreBoilVolume);
+        //}
+
+        //function createSession() {
+        //    var creationDate = Date.now();
+        //    var postGU = $('#plannedPostGU').val();
+        //    var postVol = $('#plannedPostBoilVol').val();
+        //    var boilLength = $('#plannedBoil').val();
+
+
+        //    db.transaction(
+        //    function (transaction) {
+        //        transaction.executeSql(
+        //        'INSERT INTO sessions (creationDate, postGU, postVol, boilLength) VALUES (?, ?, ?, ?);',
+        //        [creationDate, postGU, postVol, boilLength],
+        //        function (transaction, results) {
+        //            //refreshEntries();
+        //            //goBack();
+        //            debugger;
+        //            localStorage.sessionID = results.insertId;
+        //            var url = '#additionalReadings';
+        //            $.mobile.changePage(url, { transition: "fade" });
+        //            return false;
+        //        },
+        //        errorHandler,
+        //        goToCurrentBrewSession
+        //        );
+        //    }
+        //    );
+        //    return false;
+        //}
+        //function recordReading() {
+        //    getLatestSession();
+        //    return false;
+        //}
+
+        //function insertReadings(readingDateTime, currentGU, currentVol, sessionID) {
+        //    db.transaction(
+        //    function (transaction) {
+        //        transaction.executeSql(
+        //        'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
+        //        [readingDateTime, currentGU, currentVol, sessionID],
+        //        function () {
+        //            //refreshEntries();
+        //            //goBack();
+        //            goToCurrentBrewSession();
+        //            return false;
+        //        },
+        //          errorHandler,
+        //        goToCurrentBrewSession
+        //        );
+        //       }
+        //    );
+        //}
+
+        //function getLatestSession() {
+        //    var returnRow;
+        //    debugger;
+        //    db.transaction(function (transaction) {
+        //        transaction.executeSql(
+        //         'SELECT * FROM sessions order by id desc limit 1',
+        //         [],
+        //         function (transaction, result) {
+        //             debugger;
+        //             if (result.rows.length > 0) {
+        //                 var readingDateTime = Date.now();
+        //                 var currentGU = $('#currentGU').val();
+        //                 var currentVol = $('#currentVol').val();
+        //                 var sessionID = result.rows.item(0).id;
+        //                 insertReadings(readingDateTime, currentGU, currentVol, sessionID);
+        //                 refreshEntries();
+        //             }
+
+        //         },
+        //         errorHandler
+        //         );
+
+        //    });
+        //}
+
+        //function refreshEntries() {
+        //    var sessionID = localStorage.sessionID;
+        //    $('#currentBrewSession  ul li:gt(0)').remove();
+        //    db.transaction(
+        //        function (transaction) {
+        //            transaction.executeSql(
+        //                'SELECT * FROM readings WHERE sessionID = ? ORDER BY readingDateTime;',
+        //                [sessionID],
+        //                function (transaction, result) {
+        //                    debugger;
+        //                    for (var i = 0; i < result.rows.length; i++) {
+        //                        var row2 = result.rows.item(i);
+        //                        var newEntryRow = $('#readingsTemplate').clone();
+        //                        newEntryRow.removeAttr('id');
+        //                        newEntryRow.removeAttr('style');
+        //                        newEntryRow.data('entryId', row2.id);
+        //                        newEntryRow.appendTo('#currentBrewSession ul');
+        //                        var newDate = new Date(row2.readingDateTime);
+        //                        newEntryRow.find('.readingTime').text('Reading at: ' + newDate.getHours() + ':' + newDate.getMinutes());
+        //                        newEntryRow.find('.readingGU').text('Gravity Reading: ' + row2.currentGU);
+        //                        newEntryRow.find('.readingVol').text('Volume Reading: ' + row2.currentVol);
+
+        //                    }
+        //                },
+        //                errorHandler
+        //                );
+        //        })
+        //}
+
+        //function resultsHandler(transaction, result) {
+        //    debugger;
+        //    //if (result.rows.length > 0)
+        //    //    returnRow = result.rows.item(0);
+        //    returnRow = result;
+        //    alert("Results length" + result.rows.length);
+        //    //for (var i = 0; i < result.rows.length; i++) {
+        //    //    returnRow = result.rows.item(i);
+        //    //var newEntryRow = $('#entryTemplate').clone();
+        //    //newEntryRow.removeAttr('id');
+        //    //newEntryRow.removeAttr('style');
+        //    //newEntryRow.data('entryId', row.id);
+        //    //newEntryRow.appendTo('#date ul');
+        //    //newEntryRow.find('.label').text(row.food);
+        //    //newEntryRow.find('.calories').text(row.calories);
+        //    //}
+        //}
+
+
+        //function errorHandler(transaction, error) {
+        //    alert('Oops. Error was ' + error.message + ' (Code ' + error.code + ')');
+        //    return true;
+        //}
 
 
     </script>

@@ -282,6 +282,7 @@
     <Content Include="Manifest.ashx" />
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
     <Content Include="Pages\index.aspx" />
+    <Content Include="Scripts\GuCalc.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />
     <Content Include="Scripts\jquery-1.8.3.min.js" />
     <Content Include="Scripts\jquery.mobile-1.4.2.js" />
