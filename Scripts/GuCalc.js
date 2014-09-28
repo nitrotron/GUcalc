@@ -141,6 +141,8 @@ $(document).ready(function () {
 
 
     M.doIt();
+    if (localStorage.sessionID) // if we have a sessionID established then set update the entries window
+        refreshEntries();
 
 });
 
@@ -252,16 +254,7 @@ function refreshEntries() {
                     debugger;
                     for (var i = 0; i < result.rows.length; i++) {
                         var row2 = result.rows.item(i);
-                        var newEntryRow = $('#readingsTemplate').clone();
-                        newEntryRow.removeAttr('id');
-                        newEntryRow.removeAttr('style');
-                        newEntryRow.data('entryId', row2.id);
-                        newEntryRow.appendTo('#currentBrewSession ul');
-                        var newDate = new Date(row2.readingDateTime);
-                        newEntryRow.find('.readingTime').text('Reading at: ' + newDate.getHours() + ':' + newDate.getMinutes());
-                        newEntryRow.find('.readingGU').text('Gravity Reading: ' + row2.currentGU);
-                        newEntryRow.find('.readingVol').text('Volume Reading: ' + row2.currentVol);
-
+                        addReadingToDOM(row2)
                     }
                 },
                 errorHandler
@@ -269,22 +262,27 @@ function refreshEntries() {
         })
 }
 
+function addReadingToDOM(row2) {
+    var newEntryRow = $('#readingsTemplate').clone();
+    newEntryRow.removeAttr('id');
+    newEntryRow.removeAttr('style');
+    newEntryRow.data('entryId', row2.id);
+    newEntryRow.appendTo('#currentBrewSession ul');
+    var newDate = new Date(row2.readingDateTime);
+    newEntryRow.find('.readingTime').text('Reading at: ' + newDate.getHours() + ':' + newDate.getMinutes());
+    newEntryRow.find('.readingGU').text('Gravity Reading: ' + row2.currentGU);
+    newEntryRow.find('.readingVol').text('Volume Reading: ' + row2.currentVol);
+
+    //lets compute the GU and Vol
+    //var boilLeft = 
+    //todo
+    };
+
+
 function resultsHandler(transaction, result) {
     debugger;
-    //if (result.rows.length > 0)
-    //    returnRow = result.rows.item(0);
     returnRow = result;
     alert("Results length" + result.rows.length);
-    //for (var i = 0; i < result.rows.length; i++) {
-    //    returnRow = result.rows.item(i);
-    //var newEntryRow = $('#entryTemplate').clone();
-    //newEntryRow.removeAttr('id');
-    //newEntryRow.removeAttr('style');
-    //newEntryRow.data('entryId', row.id);
-    //newEntryRow.appendTo('#date ul');
-    //newEntryRow.find('.label').text(row.food);
-    //newEntryRow.find('.calories').text(row.calories);
-    //}
 }
 
 
