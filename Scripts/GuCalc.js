@@ -80,6 +80,21 @@ function Migrator(db) {
         }
     }
 }
+
+function currentSession(id, creationDate, postGU, postVol, boilLength) {
+
+    //id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
+    //' creationDate DATE NOT NULL,   ' +
+    //' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
+    //' boilLength FLOAT NOT NULL); '
+    this.id = id;
+    this.creationDate = creationDate;
+    this.postGU = postGU;
+    this.postVol = postVol;
+    this.boilLength = boilLength;
+
+
+}
 $(document).ready(function () {
     reportOnlineStatus();
     $('#submitSession').click(function () {
@@ -182,6 +197,8 @@ function createSession() {
             //goBack();
             debugger;
             localStorage.sessionID = results.insertId;
+            var myCurrectSession = new currentSession(results.insertId, creationDate, postGU, postVol, boilLength);
+            localStorage.setItem('myCurrentSession', JSON.stringify(myCurrectSession));
             var url = '#additionalReadings';
             $.mobile.changePage(url, { transition: "fade" });
             return false;
@@ -276,6 +293,8 @@ function addReadingToDOM(row2) {
     //lets compute the GU and Vol
     //var boilLeft = 
     //todo
+
+    var boilLeft = newDate - localStorage.sessionStartTime;
     };
 
 
