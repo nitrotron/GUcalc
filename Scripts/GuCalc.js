@@ -71,7 +71,7 @@ function Migrator(db) {
         }
     };
     this.doIt = function () {
-        debugger;
+        //debugger;
         var initialVersion = parseInt(db.version) || 0;
         try {
             doMigration(initialVersion + 1);
@@ -195,7 +195,7 @@ function createSession() {
         function (transaction, results) {
             //refreshEntries();
             //goBack();
-            debugger;
+            //debugger;
             localStorage.sessionID = results.insertId;
             var myCurrectSession = new currentSession(results.insertId, creationDate, postGU, postVol, boilLength);
             localStorage.setItem('myCurrentSession', JSON.stringify(myCurrectSession));
@@ -236,13 +236,13 @@ function insertReadings(readingDateTime, currentGU, currentVol, sessionID) {
 
 function getLatestSession() {
     var returnRow;
-    debugger;
+    //debugger;
     db.transaction(function (transaction) {
         transaction.executeSql(
          'SELECT * FROM sessions order by id desc limit 1',
          [],
          function (transaction, result) {
-             debugger;
+            // debugger;
              if (result.rows.length > 0) {
                  var readingDateTime = Date.now();
                  var currentGU = $('#currentGU').val();
@@ -268,7 +268,7 @@ function refreshEntries() {
                 'SELECT * FROM readings WHERE sessionID = ? ORDER BY readingDateTime;',
                 [sessionID],
                 function (transaction, result) {
-                    debugger;
+                    //debugger;
                     for (var i = 0; i < result.rows.length; i++) {
                         var row2 = result.rows.item(i);
                         addReadingToDOM(row2)
@@ -292,9 +292,24 @@ function addReadingToDOM(row2) {
 
     //lets compute the GU and Vol
     //var boilLeft = 
-    //todo
+    //todo show the current evaporation rate, 
+    // how much longer to achieve the desired vol
+    // how much longer it takes to achive the goal GU
+    // then provide a course of action. Add more water, add more boil, add more malt extract,
+    debugger;
+    var startingPoint = JSON.parse(localStorage.myCurrentSession);
 
-    var boilLeft = newDate - localStorage.sessionStartTime;
+
+    var boilEnd = new Date(startingPoint.creationDate); 
+    boilEnd.setMinutes(boilEnd.getMinutes() + startingPoint.boilLength);
+    var boilLeft = new Date(boilEnd - newDate);
+    var volBoiledOff = startingPoint.postVol - row2.currentVol;
+    var alreadyBoiled = new Date(newDate - new Date(startingPoint.creationDate));
+    var boilRateP = volBoiledOff / alreadyBoiled.getMinutes() / 60.0;
+    var totalGU = row2.currentGU * row2.currentVol;
+    var goalGU = startingPoint.postVol * startingPoint.postGU;
+    var outlookVol = totalGU / startingPoint.postGU;
+    
     };
 
 
