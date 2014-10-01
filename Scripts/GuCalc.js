@@ -301,11 +301,11 @@ function addReadingToDOM(row2) {
 
 
     var boilEnd = new Date(startingPoint.creationDate); 
-    boilEnd.setMinutes(boilEnd.getMinutes() + startingPoint.boilLength);
-    var boilLeft = new Date(boilEnd - newDate);
-    var volBoiledOff = startingPoint.postVol - row2.currentVol;
-    var alreadyBoiled = new Date(newDate - new Date(startingPoint.creationDate));
-    var boilRateP = volBoiledOff / alreadyBoiled.getMinutes() / 60.0;
+    boilEnd.setMinutes(boilEnd.getMinutes() + parseFloat(startingPoint.boilLength));
+    var boilLeft = (boilEnd.getHours() - newDate.getHours()) * 60 + boilEnd.getMinutes() - newDate.getMinutes();
+    var volBoiledOff = row2.currentVol - startingPoint.postVol;
+    var alreadyBoiled = alreadyBoiled = (newDate.getHours() - (new Date(startingPoint.creationDate)).getHours()) * 60 + newDate.getMinutes() - (new Date(startingPoint.creationDate)).getMinutes()
+    var boilRateP = volBoiledOff / alreadyBoiled / 60.0;
     var totalGU = row2.currentGU * row2.currentVol;
     var goalGU = startingPoint.postVol * startingPoint.postGU;
     var outlookVol = totalGU / startingPoint.postGU;
