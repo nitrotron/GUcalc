@@ -242,7 +242,7 @@ function getLatestSession() {
          'SELECT * FROM sessions order by id desc limit 1',
          [],
          function (transaction, result) {
-            // debugger;
+             // debugger;
              if (result.rows.length > 0) {
                  var readingDateTime = Date.now();
                  var currentGU = $('#currentGU').val();
@@ -269,9 +269,11 @@ function refreshEntries() {
                 [sessionID],
                 function (transaction, result) {
                     //debugger;
+                    var rowPrior;
                     for (var i = 0; i < result.rows.length; i++) {
                         var row2 = result.rows.item(i);
-                        addReadingToDOM(row2)
+                        addReadingToDOM(row2, rowPrior);
+                        rowPrior = row2;
                     }
                 },
                 errorHandler
@@ -279,7 +281,7 @@ function refreshEntries() {
         })
 }
 
-function addReadingToDOM(row2) {
+function addReadingToDOM(row2, rowPrior) {
     var newEntryRow = $('#readingsTemplate').clone();
     newEntryRow.removeAttr('id');
     newEntryRow.removeAttr('style');
@@ -299,18 +301,41 @@ function addReadingToDOM(row2) {
     debugger;
     var startingPoint = JSON.parse(localStorage.myCurrentSession);
 
+    if (rowPrior) {
+        var boilEnd = new Date(startingPoint.creationDate);
+        boilEnd.setMinutes(boilEnd.getMinutes() + parseFloat(startingPoint.boilLength));
+        var alreadyBoiled = (newDate.getHours() - (new Date(startingPoint.creationDate)).getHours()) * 60 + newDate.getMinutes() - (new Date(startingPoint.creationDate)).getMinutes()
+        //var boilRateP = volBoiledOff / alreadyBoiled;
+        //var totalGU = row2.currentGU * row2.currentVol;
+        //var goalGU = startingPoint.postVol * startingPoint.postGU;
+        //var outlookVol = totalGU / startingPoint.postGU;
 
-    var boilEnd = new Date(startingPoint.creationDate); 
-    boilEnd.setMinutes(boilEnd.getMinutes() + parseFloat(startingPoint.boilLength));
-    var boilLeft = (boilEnd.getHours() - newDate.getHours()) * 60 + boilEnd.getMinutes() - newDate.getMinutes();
-    var volBoiledOff = row2.currentVol - startingPoint.postVol;
-    var alreadyBoiled = alreadyBoiled = (newDate.getHours() - (new Date(startingPoint.creationDate)).getHours()) * 60 + newDate.getMinutes() - (new Date(startingPoint.creationDate)).getMinutes()
-    var boilRateP = volBoiledOff / alreadyBoiled / 60.0;
-    var totalGU = row2.currentGU * row2.currentVol;
-    var goalGU = startingPoint.postVol * startingPoint.postGU;
-    var outlookVol = totalGU / startingPoint.postGU;
+        //boilLeft is how much time to the planned boil to end
+        var boilLeft = (boilEnd.getHours() - newDate.getHours()) * 60 + boilEnd.getMinutes() - newDate.getMinutes();
+        var lastReadingTime = new Date(rowPrior.readingDateTime);
+        var boilSinceLastReading = (boilEnd.getHours() - lastReadingTime.getHours()) * 60 + boilEnd.getMinutes() - lastReadingTime.getMinutes();
+        var timeDiff = boilSinceLastReading - boilLeft;
+        var volBoiledOff = row2.currentVol - rowPrior.currentVol;
+        var curAvgBoilRate = volBoiledOff / timeDiff;
+        var estEndVolWithNoChange = row2.currentVol - (curAvgBoilRate * boilLeft);
+        var estEndGuWithNoChange = row2.currentVol * row2.currentGU / estEndVolWithNoChange;
+
+        //the amount of time to boil to reach the goal GU
+        var ammountOfTmReachGU = row2.currentGU / (startingPoint.postGU * curAvgBoilRate);
+        //what the volume would be
+        var ammountOfTmReachGUVol = row2.currentVol - (curAvgBoilRate * ammountOfTmReachGU);
+
+        //the ammount of water to add if there is no change on boil rate
+        var amntOfWaterToAdd = ((row2.currentGU * row2.currentVol) - (startingPoint.postGU * estEndVolWithNoChange)) / (startingPoint.postGU)
+
+        //est amount of DME to add. Assuming 35GU/lbl/gal
+        var gravityWeightDME = 35;
+
+        var amntofDMEtoADD = (startingPoint.postGU - estEndGuWithNoChange) / (gravityWeightDME * estEndVolWithNoChange);
+
+    }
     
-    };
+};
 
 
 function resultsHandler(transaction, result) {
