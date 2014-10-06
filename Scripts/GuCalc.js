@@ -315,8 +315,16 @@ function addReadingToDOM(row2, rowPrior) {
         var lastReadingTime = new Date(rowPrior.readingDateTime);
         var boilSinceLastReading = (boilEnd.getHours() - lastReadingTime.getHours()) * 60 + boilEnd.getMinutes() - lastReadingTime.getMinutes();
         var timeDiff = boilSinceLastReading - boilLeft;
-        var volBoiledOff = row2.currentVol - rowPrior.currentVol;
+        var volBoiledOff = rowPrior.currentVol - row2.currentVol;
+
+        //These look accurate
         var curAvgBoilRate = volBoiledOff / timeDiff;
+        var curAvgBoilRateV = (rowPrior.currentVol - row2.currentVol) / (lastReadingTime - newDate);
+        // or if that didn't work
+        curAvgBoilRateV = (rowPrior.currentVol - row2.currentVol) / (timeDiff);
+
+        var curAvgBoilRateG = (row2.currentGU - rowPrior.currentGU) / timeDiff;
+
         var estEndVolWithNoChange = row2.currentVol - (curAvgBoilRate * boilLeft);
         var estEndGuWithNoChange = row2.currentVol * row2.currentGU / estEndVolWithNoChange;
 
@@ -329,7 +337,7 @@ function addReadingToDOM(row2, rowPrior) {
         var amntOfWaterToAdd = ((row2.currentGU * row2.currentVol) - (startingPoint.postGU * estEndVolWithNoChange)) / (startingPoint.postGU)
 
         //est amount of DME to add. Assuming 35GU/lbl/gal
-        var gravityWeightDME = 35;
+        var gravityWeightDME = 44;
 
         var amntofDMEtoADD = (startingPoint.postGU - estEndGuWithNoChange) / (gravityWeightDME * estEndVolWithNoChange);
 
