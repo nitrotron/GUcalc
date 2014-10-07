@@ -176,13 +176,23 @@
                 <!-- /header -->
 
                 <div role="main" class="ui-content">
+                    <div class="goalPostGU"></div>
+                    <div class="goalPostVol"></div>
+                    <div class="goalBoilLength"></div>
+                    <br />
                     <ul data-role="listview" class="ui-listview">
                         <li id="readingsTemplate" class="entry" style="display: none">
-                            <span class="readingTime">Reading Time</span>
-                            <span class="readingGU">Gravity Units</span>
-                            <span class="readingVol">Volume</span>
-                            <span class="estPostBoilGU">Est. Post Boil Gravity:</span>
-                            <span class="estPostBoilVol">Est. Post Boil Volume:</span>
+                            <div class="readingTime">Reading Time</div>
+                            <div class="readingGU">Gravity Units</div>
+                            <div class="readingVol">Volume</div>
+                            <div class="estPostBoilGUV">Est. Post Boil Gravity:</div>
+                            <div class="estPostBoilVolV">Est. Post Boil Volume:</div>
+                             <div class="estPostBoilGUG">Est. Post Boil Gravity:</div>
+                            <div class="estPostBoilVolG">Est. Post Boil Volume:</div>
+                            <div class="amountTimeToReachGU">Est. Time To Reach Gravity:</div>
+                            <div class="amountTimeToReachGUVol">Est. Time To Reach Volume:</div>
+                            <div class="amntOfWaterToAdd">Amount of water to add to get GU for planned boil:</div>
+                            <div class="amntofDMEtoADD">Amount of DME to add to get GU for planned boil:</div>
                         </li>
                     </ul>
 

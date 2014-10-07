@@ -327,20 +327,51 @@ function addReadingToDOM(row2, rowPrior) {
 
         var estEndVolWithNoChange = row2.currentVol - (curAvgBoilRate * boilLeft);
         var estEndGuWithNoChange = row2.currentVol * row2.currentGU / estEndVolWithNoChange;
+        estEndVolWithNoChange = estEndVolWithNoChange.toFixed(2);
+        estEndGuWithNoChange = estEndGuWithNoChange.toFixed(2);
+        newEntryRow.find('.estPostBoilGUV').text('Est. PostBoil Gravity Based Vol: ' + estEndGuWithNoChange);
+        newEntryRow.find('.estPostBoilVolV').text('Est. PostBoil Volume Based Vol: ' + estEndVolWithNoChange);
+        estEndVolWithNoChange = row2.currentVol - (curAvgBoilRateG * boilLeft);
+        estEndGuWithNoChange = row2.currentVol * row2.currentGU / estEndVolWithNoChange;
+        estEndVolWithNoChange = estEndVolWithNoChange.toFixed(2);
+        estEndGuWithNoChange = estEndGuWithNoChange.toFixed(2);
+        newEntryRow.find('.estPostBoilGUG').text('Est. PostBoil Gravity Based Gravity: ' + estEndGuWithNoChange);
+        newEntryRow.find('.estPostBoilVolG').text('Est. PostBoil Volume Based Gravity: ' + estEndVolWithNoChange);
 
         //the amount of time to boil to reach the goal GU
         var ammountOfTmReachGU = row2.currentGU / (startingPoint.postGU * curAvgBoilRate);
+        ammountOfTmReachGU = ammountOfTmReachGU.toFixed(2);
+        newEntryRow.find('.amountTimeToReachGU').text('Est. Time To Reach Gravity: ' + ammountOfTmReachGU);
         //what the volume would be
         var ammountOfTmReachGUVol = row2.currentVol - (curAvgBoilRate * ammountOfTmReachGU);
+        ammountOfTmReachGUVol = ammountOfTmReachGUVol.toFixed(2);
+        newEntryRow.find('.amountTimeToReachGUVol').text('Est. Time To Reach Volume: ' + ammountOfTmReachGUVol);
 
         //the ammount of water to add if there is no change on boil rate
-        var amntOfWaterToAdd = ((row2.currentGU * row2.currentVol) - (startingPoint.postGU * estEndVolWithNoChange)) / (startingPoint.postGU)
+        var amntOfWaterToAdd = ((row2.currentGU * row2.currentVol) - (startingPoint.postGU * estEndVolWithNoChange)) / (startingPoint.postGU);
+        amntOfWaterToAdd = amntOfWaterToAdd.toFixed(2);
+        newEntryRow.find('.amntOfWaterToAdd').text('H2O to add to get GU for planned boil: ' + amntOfWaterToAdd);
 
         //est amount of DME to add. Assuming 35GU/lbl/gal
         var gravityWeightDME = 44;
 
         var amntofDMEtoADD = (startingPoint.postGU - estEndGuWithNoChange) / (gravityWeightDME * estEndVolWithNoChange);
+        amntofDMEtoADD = amntofDMEtoADD.toFixed(2);
+        newEntryRow.find('.amntofDMEtoADD').text('DME to add to get GU for planned boil: ' + amntofDMEtoADD);
 
+    }
+    else {
+        newEntryRow.find('.estPostBoilGUV').hide();
+        newEntryRow.find('.estPostBoilVolV').hide();
+        newEntryRow.find('.estPostBoilGUG').hide();
+        newEntryRow.find('.estPostBoilVolG').hide();
+        newEntryRow.find('.amountTimeToReachGU').hide();
+        newEntryRow.find('.amountTimeToReachGUVol').hide();
+        newEntryRow.find('.amntOfWaterToAdd').hide();
+        newEntryRow.find('.amntofDMEtoADD').hide();
+        $('.goalPostGU').text('Planned GU: ' + startingPoint.postGU);
+        $('.goalPostVol').text('Planned Vol: ' + startingPoint.postVol);
+        $('.goalBoilLength').text('Planned Boil Length: ' + startingPoint.boilLength);
     }
     
 };
