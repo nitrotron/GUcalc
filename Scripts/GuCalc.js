@@ -82,19 +82,13 @@ function Migrator(db) {
 }
 
 function currentSession(id, creationDate, postGU, postVol, boilLength) {
-
-    //id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-    //' creationDate DATE NOT NULL,   ' +
-    //' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
-    //' boilLength FLOAT NOT NULL); '
     this.id = id;
     this.creationDate = creationDate;
     this.postGU = postGU;
     this.postVol = postVol;
     this.boilLength = boilLength;
-
-
 }
+
 $(document).ready(function () {
     reportOnlineStatus();
     $('#submitSession').click(function () {
@@ -126,8 +120,6 @@ $(document).ready(function () {
             ' creationDate DATE NOT NULL,   ' +
             ' postGU FLOAT NOT NULL, postVol FLOAT NOT NULL, ' +
             ' boilLength FLOAT NOT NULL); '
-            //' boilStartDate Date, name TEXT '
-            //' boilLength FLOAT NOT NULL);'
             );
     });
     M.migration(2, function (t) {
@@ -193,9 +185,6 @@ function createSession() {
         'INSERT INTO sessions (creationDate, postGU, postVol, boilLength) VALUES (?, ?, ?, ?);',
         [creationDate, postGU, postVol, boilLength],
         function (transaction, results) {
-            //refreshEntries();
-            //goBack();
-            //debugger;
             localStorage.sessionID = results.insertId;
             var myCurrectSession = new currentSession(results.insertId, creationDate, postGU, postVol, boilLength);
             localStorage.setItem('myCurrentSession', JSON.stringify(myCurrectSession));
@@ -222,8 +211,6 @@ function insertReadings(readingDateTime, currentGU, currentVol, sessionID) {
         'INSERT INTO readings (readingDateTime, currentGU, currentVol, sessionID) VALUES (?, ?, ?, ?);',
         [readingDateTime, currentGU, currentVol, sessionID],
         function () {
-            //refreshEntries();
-            //goBack();
             goToCurrentBrewSession();
             return false;
         },
@@ -236,13 +223,11 @@ function insertReadings(readingDateTime, currentGU, currentVol, sessionID) {
 
 function getLatestSession() {
     var returnRow;
-    //debugger;
     db.transaction(function (transaction) {
         transaction.executeSql(
          'SELECT * FROM sessions order by id desc limit 1',
          [],
          function (transaction, result) {
-             // debugger;
              if (result.rows.length > 0) {
                  var readingDateTime = Date.now();
                  var currentGU = $('#currentGU').val();
@@ -268,7 +253,6 @@ function refreshEntries() {
                 'SELECT * FROM readings WHERE sessionID = ? ORDER BY readingDateTime;',
                 [sessionID],
                 function (transaction, result) {
-                    //debugger;
                     var rowPrior;
                     for (var i = 0; i < result.rows.length; i++) {
                         var row2 = result.rows.item(i);
@@ -298,7 +282,6 @@ function addReadingToDOM(row2, rowPrior) {
     // how much longer to achieve the desired vol
     // how much longer it takes to achive the goal GU
     // then provide a course of action. Add more water, add more boil, add more malt extract,
-    debugger;
     var startingPoint = JSON.parse(localStorage.myCurrentSession);
 
     if (rowPrior) {
@@ -331,31 +314,38 @@ function addReadingToDOM(row2, rowPrior) {
         estEndGuWithNoChange = estEndGuWithNoChange.toFixed(2);
         newEntryRow.find('.estPostBoilGUV').text('Est. PostBoil Gravity Based Vol: ' + estEndGuWithNoChange);
         newEntryRow.find('.estPostBoilVolV').text('Est. PostBoil Volume Based Vol: ' + estEndVolWithNoChange);
-        estEndVolWithNoChange = row2.currentVol - (curAvgBoilRateG * boilLeft);
-        estEndGuWithNoChange = row2.currentVol * row2.currentGU / estEndVolWithNoChange;
+        //estEndVolWithNoChange = row2.currentVol - (curAvgBoilRateG * boilLeft);
+        //estEndGuWithNoChange = row2.currentVol * row2.currentGU / estEndVolWithNoChange;
+        estEndGuWithNoChange = row2.currentGU + (curAvgBoilRateG * boilLeft);
+        estEndVolWithNoChange = (row2.currentGU * row2.currentVol) / estEndGuWithNoChange;
         estEndVolWithNoChange = estEndVolWithNoChange.toFixed(2);
         estEndGuWithNoChange = estEndGuWithNoChange.toFixed(2);
         newEntryRow.find('.estPostBoilGUG').text('Est. PostBoil Gravity Based Gravity: ' + estEndGuWithNoChange);
         newEntryRow.find('.estPostBoilVolG').text('Est. PostBoil Volume Based Gravity: ' + estEndVolWithNoChange);
 
         //the amount of time to boil to reach the goal GU
-        var ammountOfTmReachGU = row2.currentGU / (startingPoint.postGU * curAvgBoilRate);
+        //var ammountOfTmReachGU = row2.currentGU / (startingPoint.postGU * curAvgBoilRate);
+        debugger;
+        var ammountOfTmReachGU = (startingPoint.postGU - row2.curAvgBoilRate) / curAvgBoilRateG;
         ammountOfTmReachGU = ammountOfTmReachGU.toFixed(2);
         newEntryRow.find('.amountTimeToReachGU').text('Est. Time To Reach Gravity: ' + ammountOfTmReachGU);
+
         //what the volume would be
         var ammountOfTmReachGUVol = row2.currentVol - (curAvgBoilRate * ammountOfTmReachGU);
         ammountOfTmReachGUVol = ammountOfTmReachGUVol.toFixed(2);
         newEntryRow.find('.amountTimeToReachGUVol').text('Est. Time To Reach Volume: ' + ammountOfTmReachGUVol);
 
         //the ammount of water to add if there is no change on boil rate
-        var amntOfWaterToAdd = ((row2.currentGU * row2.currentVol) - (startingPoint.postGU * estEndVolWithNoChange)) / (startingPoint.postGU);
+        //var amntOfWaterToAdd = ((row2.currentGU * row2.currentVol) - (startingPoint.postGU * estEndVolWithNoChange)) / (startingPoint.postGU);
+        var amntOfWaterToAddGoal = (row2.currentGU * row2.currentVol) / startingPoint.postGU;
+        var amntOfWaterToAdd = estEndVolWithNoChange - amntOfWaterToAddGoal;
         amntOfWaterToAdd = amntOfWaterToAdd.toFixed(2);
         newEntryRow.find('.amntOfWaterToAdd').text('H2O to add to get GU for planned boil: ' + amntOfWaterToAdd);
 
         //est amount of DME to add. Assuming 35GU/lbl/gal
         var gravityWeightDME = 44;
 
-        var amntofDMEtoADD = (startingPoint.postGU - estEndGuWithNoChange) / (gravityWeightDME * estEndVolWithNoChange);
+        var amntofDMEtoADD = (startingPoint.postGU - estEndGuWithNoChange) / (gravityWeightDME / estEndVolWithNoChange);
         amntofDMEtoADD = amntofDMEtoADD.toFixed(2);
         newEntryRow.find('.amntofDMEtoADD').text('DME to add to get GU for planned boil: ' + amntofDMEtoADD);
 
@@ -373,7 +363,7 @@ function addReadingToDOM(row2, rowPrior) {
         $('.goalPostVol').text('Planned Vol: ' + startingPoint.postVol);
         $('.goalBoilLength').text('Planned Boil Length: ' + startingPoint.boilLength);
     }
-    
+
 };
 
 

@@ -1,0 +1,27 @@
+﻿body {
+}
+
+
+#onlineStatus
+{
+    position:absolute;
+    right:0px;
+    top:0px;
+    font-size:.7em;
+    padding:6px;
+    -moz-border-radius-bottomleft: 10px;
+    border-bottom-left-radius: 10px;
+    color:#fff;
+}
+
+
+.online
+{
+    background-color:#060;
+}
+      
+.offline
+{
+    background-color:#900;
+}
+      
