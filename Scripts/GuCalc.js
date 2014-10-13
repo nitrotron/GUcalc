@@ -326,7 +326,7 @@ function addReadingToDOM(row2, rowPrior) {
         //the amount of time to boil to reach the goal GU
         //var ammountOfTmReachGU = row2.currentGU / (startingPoint.postGU * curAvgBoilRate);
         debugger;
-        var ammountOfTmReachGU = (startingPoint.postGU - row2.curAvgBoilRate) / curAvgBoilRateG;
+        var ammountOfTmReachGU = (startingPoint.postGU - row2.currentGU) / curAvgBoilRateG;
         ammountOfTmReachGU = ammountOfTmReachGU.toFixed(2);
         newEntryRow.find('.amountTimeToReachGU').text('Est. Time To Reach Gravity: ' + ammountOfTmReachGU);
 
